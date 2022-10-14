@@ -1,3 +1,20 @@
+#
+# Custom
+#
+.idea/
+run*.sh
+
+**/.DS_Store
+**/aaa*/
+#
+# Custom - docker
+#
+node_modules_docker/
+
+#
+# From template
+#
+
 # Logs
 logs
 *.log
