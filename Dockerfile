@@ -1,11 +1,11 @@
 FROM node
 
-WORKDIR /server_basic
+WORKDIR /server_web_analyzer
 
-COPY package*.json /server_basic/
-COPY entrypoint.sh /server_basic/
+COPY package*.json /server_web_analyzer/
+COPY entrypoint.sh /server_web_analyzer/
 
-ENTRYPOINT [ "sh", "/server_basic/entrypoint.sh" ]
+ENTRYPOINT [ "sh", "/server_web_analyzer/entrypoint.sh" ]
 
 
 

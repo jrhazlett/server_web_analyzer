@@ -4,6 +4,11 @@
 import fs from "fs";
 import path from "path";
 //
+// Libraries - custom
+//
+import helperErrors from "../../helpersErrors/helperErrors.js";
+import helperStrings from "../../helpersStrings/helperStrings.js";
+//
 // Public
 //
 class HelperPathsProject {
@@ -29,7 +34,7 @@ class HelperPathsProject {
                 `this.fieldStringPathDirProject = ${this.fieldStringPathDirProject}`,
                 `argStringPath.startsWith( this.fieldStringPathDirProject ) = ${argStringPath.startsWith( this.fieldStringPathDirProject )}`,
             ]
-            return Error( arrayError.reduce( ( itemStringPrev, itemString ) => itemStringPrev + "\n" + itemString ) )
+            return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( arrayError, "\n", ) ) )
         }
         return undefined
     }

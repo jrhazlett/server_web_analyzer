@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-cd /server_basic
+cd /server_web_analyzer
 
 npm i
 

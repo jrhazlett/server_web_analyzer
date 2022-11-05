@@ -9,7 +9,8 @@ This class is pretty much in response to an xpath bug:
 //
 // Libraries - custom
 //
-import helperStrings from "../helpersNativeDataTypes/helperStrings.js";
+import helperErrors from "../helpersErrors/helperErrors.js";
+import helperStrings from "../helpersStrings/helperStrings.js";
 //
 // Public
 //
@@ -29,12 +30,12 @@ export default class helperValidatorHtmlTags {
         const arrayOfInvalidTags = helperValidatorHtmlTags._getArrayOfInvalidTags( argStringXpath )
 
         if ( arrayOfInvalidTags.length > 0 ) {
-            return Error( [
+            return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( [
                 "argStringXpath is not exclusively standard tags",
                 `argStringXpath = ${argStringXpath}`,
                 `arrayOfInvalidTags = ${helperStrings.getStringPrintableFromIterable(arrayOfInvalidTags)}`,
                 " ",
-            ].reduce( ( itemStringPrev, itemString ) => itemStringPrev + "\n" + itemString ) )
+            ], "\n", ) ) )
         }
     }
 

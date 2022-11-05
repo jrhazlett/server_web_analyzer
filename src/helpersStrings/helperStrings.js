@@ -1,6 +1,15 @@
 export default class helperStrings {
 
     /**
+     * @param {[]} argArrayOfStrings
+     * @param {string} argStringDelimiter
+     * */
+    static getStringByCombiningArray = ( argArrayOfStrings, argStringDelimiter = "" ) => {
+        if ( argArrayOfStrings.length === 0 ) { return "" }
+        return argArrayOfStrings.reduce( ( itemStringPrev, itemString ) => itemStringPrev + argStringDelimiter + itemString )
+    }
+
+    /**
      * This function is a less efficient version of getStringFromArgViaEnumDataType()
      * It exists to functions with simpler overhead like getValueAtPath()
      *

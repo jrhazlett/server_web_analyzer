@@ -5,15 +5,22 @@ import prettyPrinterForHumans from "pretty_printer_for_humans";
 //
 // Libraries - custom
 //
-import helperApp from "./helpersApp/helperApp.js";
-import HelperBrowserSelenium from "./helpersNetworking/helpersBrowsers/helperBrowserSelenium.js";
-import HelperBrowserPuppeteer from "./helpersNetworking/helpersBrowsers/helperBrowserPuppeteer.js";
 import helperApiClientRest from "./helpersNetworking/helpersApiClients/helperApiClientRest.js";
 import helperApiClientSoap from "./helpersNetworking/helpersApiClients/helperApiClientSoap.js";
+
+import helperApp from "./helpersApp/helperApp.js";
+
+import HelperBrowserSelenium from "./helpersNetworking/helpersBrowsers/helperBrowserSelenium.js";
+import HelperBrowserPuppeteer from "./helpersNetworking/helpersBrowsers/helperBrowserPuppeteer.js";
+
 import helperFiles from "./helpersDisk/helpersFiles/helperFiles.js";
+
 import helperPaths from "./helpersDisk/helpersPaths/helperPaths.js";
 import helperPathsProject from "./helpersDisk/helpersPaths/helperPathsProject.js";
+
 import helperValidatorHtmlTags from "./helpersValidators/helperValidatorHtmlTags.js";
+
+import HelperXpathsAndValues from "./helpersXpathsAndValues/helperXpathsAndValues.js";
 //
 // Public
 //
@@ -123,11 +130,19 @@ class helperExampleTasks {
 
         const helperBrowserPuppeteer = new HelperBrowserPuppeteer()
 
-        await helperBrowserPuppeteer.setUrl( "http://127.0.0.1:8080/testForm" )
+        const stringUrl = "http://127.0.0.1:8080/testForm"
 
-        await helperBrowserPuppeteer.setValueForFieldsAtXpathsAndSubmitForm( {
-            "//input" : "TEST_VALUES"
-        } )
+        const stringXpath = "//input[@id='team_name']"
+
+        await helperBrowserPuppeteer.setUrlAndWaitForXpath( stringUrl, stringXpath, )
+
+        const arrayOfPairsStringXpathsAndStringValues = [
+            [
+                stringXpath,
+                "TEST_VALUES",
+            ],
+        ]
+        await helperBrowserPuppeteer.setValuesForFieldsAtXpathsViaArrayOfPairsAndSubmitForm( arrayOfPairsStringXpathsAndStringValues )
     }
 }
 
@@ -140,7 +155,7 @@ const main = async () => {
     //await helperExampleTasks.runWebScrapePuppeteer()
     //await helperExampleTasks.runWebScrapeSelenium()
 
-    //await helperExampleTasks.runSubmitFormPuppeteer()
+    await helperExampleTasks.runSubmitFormPuppeteer()
 }
 main().then( () => helperApp.exitApp() )
 

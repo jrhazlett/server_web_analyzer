@@ -17,6 +17,10 @@ console.log( await helperBrowser.getStringPageSource() )
 //
 import webdriver, { By, until } from "selenium-webdriver"
 //
+// Libraries - custom
+//
+import helperErrors from "../../helpersErrors/helperErrors.js";
+//
 // Public
 //
 export default class HelperBrowserSelenium {
@@ -129,7 +133,14 @@ export default class HelperBrowserSelenium {
 
             if ( arrayOfWebElements.length === 0 ) {
                 arrayOfPromises[ itemIntIndex ] = new Promise(
-                    resolve => resolve( Error( `Xpath not found; itemStringXpath = ${itemStringXpath}; itemStringText = ${itemStringText}` ) ) )
+                    resolve => {
+                        resolve(
+                            helperErrors.raiseError( Error(
+                                `Xpath not found; itemStringXpath = ${itemStringXpath}; itemStringText = ${itemStringText}`
+                            ) )
+                        )
+                    }
+                )
             } else {
                 //
                 // Send string to all returned WebElements

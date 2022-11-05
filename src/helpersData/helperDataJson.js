@@ -2,7 +2,8 @@
 // Libraries - custom
 //
 import helperEnumDataTypes from "./helperEnumDataTypes.js";
-import helperStrings from "../helpersNativeDataTypes/helperStrings.js";
+import helperStrings from "../helpersStrings/helperStrings.js";
+import helperErrors from "../helpersErrors/helperErrors.js";
 //
 // Public
 //
@@ -243,7 +244,7 @@ export default class helperDataJson {
                 break;
         }
         arrayToReturn.push( `dataTypeAtFailure = ${helperEnumDataTypes.getStringDataType(arg)}` );
-        return Error( arrayToReturn.reduce( (itemStringPrev, itemString) => itemStringPrev + "\n" + itemString ) );
+        return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( arrayToReturn, "\n", ) ) );
     };
 
     /**

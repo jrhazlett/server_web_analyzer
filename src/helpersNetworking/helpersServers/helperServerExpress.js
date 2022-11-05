@@ -5,6 +5,7 @@ npm i express
 // Libraries - downloaded
 //
 import express from "express"
+import helperErrors from "../../helpersErrors/helperErrors.js";
 //
 // Globals
 //
@@ -45,7 +46,11 @@ export default class HelperServerExpress {
             )
             return null
 
-        } else { return Error( `Failed to set command: ${argEnumRestMethod} for route: ${argStringRoute}` ) }
+        } else {
+            return helperErrors.raiseError( Error(
+                `Failed to set command: ${argEnumRestMethod} for route: ${argStringRoute}`
+            ) )
+        }
 
     }
 

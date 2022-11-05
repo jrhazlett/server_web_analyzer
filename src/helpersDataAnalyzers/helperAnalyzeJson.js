@@ -4,6 +4,9 @@ Optimizations:
 - Extensive use of int and switch statements to streamline evaluations
 - Avoid unnecessary recursions
 */
+import helperErrors from "../helpersErrors/helperErrors.js";
+import helperStrings from "../helpersStrings/helperStrings.js";
+
 class _enumSignificantDataTypes {
 
     static fieldArray = 1
@@ -423,7 +426,7 @@ export default class helperAnalyzeJson {
                 arrayOfStrings.push( `Object at failure isn't a container.` )
                 break
         }
-        return Error( arrayOfStrings.reduce( ( itemStringPrev, itemString ) => `${itemStringPrev}\n${itemString}` ) )
+        return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( arrayOfStrings, "\n", ) ) )
     }
 
     //

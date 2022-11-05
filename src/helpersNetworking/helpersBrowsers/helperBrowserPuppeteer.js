@@ -1,12 +1,30 @@
 //
 // Libraries - downloaded
 //
+import prettyPrinterForHumans from "pretty_printer_for_humans";
 import puppeteer from "puppeteer";
 //
 // Libraries - custom
 //
 import helperApp from "../../helpersApp/helperApp.js";
+import helperErrors from "../../helpersErrors/helperErrors.js";
 import helperPathsProject from "../../helpersDisk/helpersPaths/helperPathsProject.js";
+import helperStrings from "../../helpersStrings/helperStrings.js";
+//
+//
+//
+class HelperInput {
+
+    callback = ( ...argArray ) => { argArray.map( itemWebElement => { itemWebElement.value = this.fieldStringInput } ) }
+
+    /**
+     * @param {string} argStringInput
+     * */
+    constructor(argStringInput) {
+        this.fieldStringInput = argStringInput
+    }
+
+}
 //
 // Public
 //
@@ -123,11 +141,11 @@ export default class HelperBrowserPuppeteer {
     getErrorIfPageLoadNotWaitedFor = () => {
 
         if ( !this.fieldBoolXpathLoaded ) {
-            return Error([
+            return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( [
                 "Page load not waited for.",
                 `this.fieldBoolXpathLoaded = ${this.fieldBoolXpathLoaded}`,
                 " "
-            ].reduce( (itemStringPrev, itemString) => itemStringPrev + "\n" + itemString ))
+            ], "\n", ) ) )
         }
         return undefined
     }
@@ -170,27 +188,45 @@ export default class HelperBrowserPuppeteer {
      *
      * The array contains web elements
      * */
-    setValueForFieldAtXpath = async ( argStringXpath, argStringValue ) => {
+    setValueForTextFieldAtXpath = async ( argStringXpath, argStringValue ) => {
 
         const arrayOfWebElements = await this.getArrayOfWebElementsViaXpath( argStringXpath )
-
         for ( let itemIndex = 0, intLength = arrayOfWebElements.length; itemIndex < intLength; itemIndex++ ) {
+
             const itemWebElement = arrayOfWebElements[ itemIndex ]
-            itemWebElement.value = argStringValue
+            //
+            // Reminder: The three-click count is necessary to highlight all the text to replace it.
+            //
+            await itemWebElement.click( { clickCount: 3 } )
+            await itemWebElement.type( argStringValue )
         }
         return arrayOfWebElements
     }
 
     /**
-     * @param {Object} argObjectStringsXpathsAndStringsValues
+     * @param {[]} argArrayOfWebElements
+     * @param {string} argStringValue
      * */
-    setValueForFieldsAtXpathsAndSubmitForm = async ( argObjectStringsXpathsAndStringsValues ) => {
+    _setValue = ( argArrayOfWebElements, argStringValue ) => {
 
-        const arrayOfStringXpaths = Object.entries( argObjectStringsXpathsAndStringsValues )
-        for ( let itemIndex = 0, intLength = arrayOfStringXpaths.length; itemIndex < intLength; itemIndex++ ) {
+        console.log( `argArrayOfWebElements.length = ${argArrayOfWebElements.length}\n` )
+        console.log( `argStringValue = ${argStringValue}\n` )
 
-            const [ itemStringXpath, itemStringValue ] = arrayOfStringXpaths[ itemIndex ]
-            await this.setValueForFieldAtXpath( itemStringXpath, itemStringValue, )
+        for ( let itemIndex = 0, intLength = argArrayOfWebElements.length; itemIndex < intLength; itemIndex++ ) {
+            argArrayOfWebElements[ itemIndex ].value = argStringValue
+        }
+    }
+
+    /**
+     * @param {[]} argArrayOfPairsStringXpathsAndStringValues
+     * */
+    setValuesForFieldsAtXpathsViaArrayOfPairsAndSubmitForm = async ( argArrayOfPairsStringXpathsAndStringValues ) => {
+
+        for ( let itemIndex = 0, intLength = argArrayOfPairsStringXpathsAndStringValues.length; itemIndex < intLength; itemIndex++ ) {
+
+            const [ itemStringXpath, itemStringValue ] = argArrayOfPairsStringXpathsAndStringValues[ itemIndex ]
+
+            await this.setValueForTextFieldAtXpath( itemStringXpath, itemStringValue, )
         }
         await this.clickSubmitOnForm()
     }
@@ -276,12 +312,12 @@ export default class HelperBrowserPuppeteer {
     _getErrorIfXpathInvalid = ( argStringXpath ) => {
 
         if ( HelperBrowserPuppeteer.FIELD_SET_OF_KNOWN_INVALID_XPATHS.has( argStringXpath ) ) {
-            return Error( [
+            return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( [
                 "argStringXpath is a known invalid value",
                 `argStringXpath = ${argStringXpath}`,
                 `HelperBrowserPuppeteer.SET_OF_KNOWN_INVALID_XPATHS = ${ this._getStringArrayPrintable( Array.from( HelperBrowserPuppeteer.FIELD_SET_OF_KNOWN_INVALID_XPATHS ).sort() ) }`,
                 `\n`,
-            ].reduce( ( itemStringPrev, itemString ) => itemStringPrev + "\n" + itemString ) )
+            ], "\n", ) ) )
         }
         return undefined
     }
