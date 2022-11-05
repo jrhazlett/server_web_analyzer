@@ -11,21 +11,6 @@ import helperErrors from "../../helpersErrors/helperErrors.js";
 import helperPathsProject from "../../helpersDisk/helpersPaths/helperPathsProject.js";
 import helperStrings from "../../helpersStrings/helperStrings.js";
 //
-//
-//
-class HelperInput {
-
-    callback = ( ...argArray ) => { argArray.map( itemWebElement => { itemWebElement.value = this.fieldStringInput } ) }
-
-    /**
-     * @param {string} argStringInput
-     * */
-    constructor(argStringInput) {
-        this.fieldStringInput = argStringInput
-    }
-
-}
-//
 // Public
 //
 export default class HelperBrowserPuppeteer {
