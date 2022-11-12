@@ -8,26 +8,28 @@ Its 100% static, so it should only exist in memory once.
 // Public
 //
 export default class helperEnumDataTypes {
+    //
     // These data types are iterated through, but aren't actually directly printed to output
+    //
     static fieldArray = 1;
     static fieldObject = 2;
-
+    //
     // These data types trigger debugging messages
+    //
     static fieldError = 3;
     static fieldPromise = 4;
     static fieldCircularReference = 5;
-
+    //
     // This data type requires special formatting to avoid dumping the function
     // defs onto the screen
+    //
     static fieldFunction = 6;
-
+    //
     // This data type is generally what gets printed to the output
+    //
     static fieldEitherNonIterableOrString = 7;
-
     static fieldSymbol = 8;
-
     static fieldMap = 9;
-
     static fieldSet = 10;
 
     /**
@@ -108,13 +110,13 @@ export default class helperEnumDataTypes {
      * @param {any} arg
      * @returns boolean
      * */
-    static isComplexArg = (arg) => { return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has( helperEnumDataTypes.getEnumDataType(arg) ); };
+    static isComplexArg = ( arg ) => { return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has( helperEnumDataTypes.getEnumDataType( arg ) ); };
 
     /**
      * @param {number} argEnumType
      * @returns boolean
      * */
-    static isComplexEnumType = (argEnumType) => { return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(argEnumType); };
+    static isComplexEnumType = ( argEnumType ) => { return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has( argEnumType ); };
 }
 
 

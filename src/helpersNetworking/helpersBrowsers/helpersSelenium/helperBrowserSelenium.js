@@ -19,7 +19,7 @@ import webdriver, { By, until } from "selenium-webdriver"
 //
 // Libraries - custom
 //
-import helperErrors from "../../helpersErrors/helperErrors.js";
+import helperErrors from "../../../helpersErrors/helperErrors.js";
 //
 // Public
 //
@@ -38,7 +38,7 @@ export default class HelperBrowserSelenium {
      * */
     getArrayOfStringsViaXpath = async ( argStringUrl, argStringXpath, argCallbackArgUnpackedArrayReturnAttribute ) => {
 
-        const arrayOfWebElements = await this.getArrayOfWebElementsViaXpath(
+        const arrayOfWebElements = await this.getArrayOfElementHandlesViaXpath(
             argStringUrl,
             argStringXpath,
         )
@@ -50,7 +50,7 @@ export default class HelperBrowserSelenium {
      * @param {string} argStringXpath
      * @returns Promise
      * */
-    getArrayOfWebElementsViaXpath = async ( argStringUrl, argStringXpath ) => {
+    getArrayOfElementHandlesViaXpath = async ( argStringUrl, argStringXpath ) => {
         await this.setUrl( argStringUrl )
         return await this.fieldBrowser.findElements( By.xpath( argStringXpath ) )
     }

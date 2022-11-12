@@ -11,7 +11,9 @@ import { xml2js } from "xml-js";
 // Public
 //
 export default class helperDataXml {
-
+    //
+    // Public
+    //
     /**
      * @param {string} argStringXml
      * */

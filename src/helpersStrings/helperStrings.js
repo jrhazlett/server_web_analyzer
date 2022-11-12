@@ -1,12 +1,23 @@
+//
+// Public
+//
 export default class helperStrings {
-
+    //
+    // Public
+    //
     /**
      * @param {[]} argArrayOfStrings
      * @param {string} argStringDelimiter
      * */
     static getStringByCombiningArray = ( argArrayOfStrings, argStringDelimiter = "" ) => {
-        if ( argArrayOfStrings.length === 0 ) { return "" }
-        return argArrayOfStrings.reduce( ( itemStringPrev, itemString ) => itemStringPrev + argStringDelimiter + itemString )
+        return argArrayOfStrings.length === 0
+            ? ""
+            : argArrayOfStrings.reduce(
+                ( itemPrev, item ) => {
+                    const itemStringPrev = typeof itemPrev === "symbol" ? itemPrev.toString() : `${itemPrev}`
+                    const itemString = typeof item === "symbol" ? item.toString() : `${item}`
+                    return itemStringPrev + argStringDelimiter + itemString
+                } )
     }
 
     /**
@@ -18,28 +29,24 @@ export default class helperStrings {
      * @param {any} arg
      * @returns string
      * */
-    static getStringFromArg = (arg) => {
-        switch (typeof arg) {
-            //
-            // Reminder: symbols do *not* support `${}`
-            //
-            case "symbol": return arg.toString();
-            default: return `${arg}`;
-        }
-    };
+    static getStringFromArg = ( arg ) => { return typeof arg === "symbol" ? arg.toString() : `${arg}` };
 
     /**
      * @param {[]} argIterable
      * @return string
      * */
     static getStringPrintableFromIterable = (argIterable) => {
-        const arrayFromArg = Array.from(argIterable);
-        if (arrayFromArg.length === 0) { return "[]"; }
-        const arrayToReturn = new Array(arrayFromArg.length);
-        for ( let itemIntIndex = 0, intLength = arrayFromArg.length; itemIntIndex < intLength; itemIntIndex++ ) {
-            arrayToReturn[itemIntIndex] = helperStrings.getStringFromArg( arrayFromArg[itemIntIndex] );
-        }
-        return `[ ${arrayToReturn.reduce( (itemStringPrev, itemString) => itemStringPrev + ", " + itemString )} ]`;
+
+        const arrayFromArg = Array.from( argIterable )
+        if ( arrayFromArg.length === 0 ) { return "[]" }
+
+        return `[ ${arrayFromArg.reduce( 
+            ( itemPrev, item ) => {
+                const itemStringPrev = typeof itemPrev === "symbol" ? itemPrev.toString() : `${itemPrev}`
+                const itemString = typeof item === "symbol" ? item.toString() : `${item}`
+                return itemStringPrev + ", " + itemString 
+            } 
+        )} ]`
     };
 }
 
