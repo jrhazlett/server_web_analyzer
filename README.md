@@ -20,8 +20,8 @@ Wrapper: src/helpersNetworking/helpersApiClients/helperApiClientRest.js
 
 ### Notes
 
-- Doesn't throw errors on >=400 codes
-- Includes common headers as callable functions (will likely update these as needed)
+-   Doesn't throw errors on >=400 codes
+-   Includes common headers as callable functions (will likely update these as needed)
 
 ## express
 
@@ -33,8 +33,8 @@ Wrapper: src/helpersNetworking/helpersBrowsers/helperBrowserPuppeteer.js
 
 ### Notes
 
-- This has validation which checks for xpaths that caused issues during execution
-- Checks for tag misspellings
+-   This has validation which checks for xpaths that caused issues during execution
+-   Checks for tag misspellings
 
 ## selenium (NOTE: As of right now, the available driver version is incompatible with the latest chrome)
 
@@ -46,54 +46,5 @@ Wrapper: src/helpersNetworking/helpersApiClients/helperApiClientSoap.js
 
 ### Notes
 
-- Includes example soap calls
-- Includes example xml packages
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-   Includes example soap calls
+-   Includes example xml packages

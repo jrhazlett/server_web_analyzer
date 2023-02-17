@@ -4,7 +4,7 @@ Notes: Everything here runs in the 'main' thread
 //
 // Libraries - downloaded?
 //
-import { isMainThread, Worker } from "node:worker_threads"
+import { isMainThread, Worker } from "node:worker_threads";
 //
 // Debugging
 //
@@ -12,7 +12,7 @@ import { isMainThread, Worker } from "node:worker_threads"
 //
 // Worker
 //
-const stringPathWorker = "./src/helpersWorkers/worker.js"
+const stringPathWorker = "./src/helpersWorkers/worker.js";
 //
 // Public
 //
@@ -22,85 +22,29 @@ export default class helperSpawnerForWorkers {
     //
     /***
      * @param {any} arg
-     * @param {[]} argArrayPath
-     * @returns Promise
+     * @param {any[]} argArrayPath
+     * @returns {Promise}
      */
-    static getPromiseForSpawnedWorker = async ( arg, argArrayPath ) => {
-
-        return new Promise( ( resolve, reject ) => {
-
-            const worker = new Worker( stringPathWorker, { type: "module", }, )
+    static getPromiseForSpawnedWorker = async (arg, argArrayPath) =>
+        new Promise((resolve, reject) => {
+            const worker = new Worker(stringPathWorker, { type: "module" });
             //
             // Return on success
             //
-            worker.once( "message", argForMessage => resolve( argForMessage ), )
+            worker.once("message", (argForMessage) => resolve(argForMessage));
             //
             // Return on error
             //
-            worker.onerror = err => reject( `${stringPathWorker}: err = ${err}` )
+            worker.onerror = (err) =>
+                reject(`${stringPathWorker}: err = ${err}`);
             //
             // Pass arg to worker
             //
-            worker.postMessage( {
+            worker.postMessage({
                 arg: arg,
                 argArrayPath: argArrayPath,
                 argArrayOfKeysInOrder: ["argArrayPath", "arg"],
                 argStringNameForFunction: "getValueAtPathInArg",
-            } )
-        } )
-    }
+            });
+        });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

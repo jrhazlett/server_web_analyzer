@@ -40,43 +40,39 @@ class _helperEnumDataTypes {
      * @param {number} argEnumType
      * @returns {any}
      * */
-    static getEmptyValueOfComplexTypeViaEnumType = ( argEnumType ) => {
-        switch ( argEnumType ) {
-            case _helperEnumDataTypes.fieldArray: return []
-            case _helperEnumDataTypes.fieldError: return new Error()
-            case _helperEnumDataTypes.fieldMap: return new Map()
-            case _helperEnumDataTypes.fieldObject: return {}
-            case _helperEnumDataTypes.fieldSet: return new Set()
-            default: return undefined
+    static getEmptyValueOfComplexTypeViaEnumType = (argEnumType) => {
+        switch (argEnumType) {
+            case _helperEnumDataTypes.fieldArray:
+                return [];
+            case _helperEnumDataTypes.fieldError:
+                return new Error();
+            case _helperEnumDataTypes.fieldMap:
+                return new Map();
+            case _helperEnumDataTypes.fieldObject:
+                return {};
+            case _helperEnumDataTypes.fieldSet:
+                return new Set();
+            default:
+                return undefined;
         }
-    }
+    };
 
     /**
      * @param {any} arg
      * @returns number
      * */
-    static getEnumDataType = ( arg ) => {
+    static getEnumDataType = (arg) => {
         switch (typeof arg) {
-            //
-            // Function
-            //
-            case "function": return _helperEnumDataTypes.fieldFunction;
-            //
-            // Object
-            //
-            case "object": return _helperEnumDataTypes._getEnumDataTypeForObject(arg);
-            //
-            // Symbol
-            //
-            // Reminder: This is important because symbols do *not* support `${}` string conversions
-            case "symbol": return _helperEnumDataTypes.fieldSymbol;
-
-            case "undefined": return _helperEnumDataTypes.fieldEitherNonIterableOrString;
-            //
-            // All other cases
-            //
-            // If we get this far, then all other possibilities have been ruled out
-            default: return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            case "function":
+                return _helperEnumDataTypes.fieldFunction;
+            case "object":
+                return _helperEnumDataTypes._getEnumDataTypeForObject(arg);
+            case "symbol":
+                return _helperEnumDataTypes.fieldSymbol;
+            case "undefined":
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            default:
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
         }
     };
 
@@ -84,15 +80,22 @@ class _helperEnumDataTypes {
      * @param {Object} argObject
      * @return number
      * */
-    static _getEnumDataTypeForObject = ( argObject ) => {
+    static _getEnumDataTypeForObject = (argObject) => {
         switch (true) {
-            case Array.isArray(argObject): return _helperEnumDataTypes.fieldArray;
-            case argObject instanceof Error: return _helperEnumDataTypes.fieldError;
-            case argObject instanceof Map: return _helperEnumDataTypes.fieldMap;
-            case argObject === null: return _helperEnumDataTypes.fieldEitherNonIterableOrString;
-            case argObject instanceof Promise: return _helperEnumDataTypes.fieldPromise;
-            case argObject instanceof Set: return _helperEnumDataTypes.fieldSet;
-            default: return _helperEnumDataTypes.fieldObject;
+            case Array.isArray(argObject):
+                return _helperEnumDataTypes.fieldArray;
+            case argObject instanceof Error:
+                return _helperEnumDataTypes.fieldError;
+            case argObject instanceof Map:
+                return _helperEnumDataTypes.fieldMap;
+            case argObject === null:
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            case argObject instanceof Promise:
+                return _helperEnumDataTypes.fieldPromise;
+            case argObject instanceof Set:
+                return _helperEnumDataTypes.fieldSet;
+            default:
+                return _helperEnumDataTypes.fieldObject;
         }
     };
 
@@ -100,34 +103,29 @@ class _helperEnumDataTypes {
      * @param {number} argEnumType
      * @returns boolean
      * */
-    static isEnumTypeToProcess = ( argEnumType ) => {
-        return _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType)
-    }
+    static isEnumTypeToProcess = (argEnumType) =>
+        _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType);
 }
 //
 // Class
 //
 class _HelperItemForStack {
-
+    //
+    // Setup
+    //
     /**
      * @param {any} argInput
      * @param {any} argOutput
      * @param {number} argEnumDataType
      * @param {Function} argCallback
-     * @param {[]} argStack
+     * @param {_HelperItemForStack[]} argStack
      * */
-    constructor(
-        argInput,
-        argOutput,
-        argEnumDataType,
-        argCallback,
-        argStack
-    ) {
-        this.fieldInput = argInput
-        this.fieldOutput = argOutput
-        this.fieldEnumDataType = argEnumDataType
-        this.fieldCallback = argCallback
-        this.fieldStack = argStack
+    constructor(argInput, argOutput, argEnumDataType, argCallback, argStack) {
+        this.fieldInput = argInput;
+        this.fieldOutput = argOutput;
+        this.fieldEnumDataType = argEnumDataType;
+        this.fieldCallback = argCallback;
+        this.fieldStack = argStack;
     }
 }
 //
@@ -135,7 +133,7 @@ class _HelperItemForStack {
 //
 export default class helperCopyingWithCallback {
     //
-    // Public
+    // Public - get - getTreeCopiedWithValuesProcessedViaCallback
     //
     /**
      * This method returns the same data type as argInputRoot
@@ -144,84 +142,87 @@ export default class helperCopyingWithCallback {
      * @param {Function} argCallback
      * @returns any
      * */
-    static getTreeCopiedWithValuesProcessedViaCallback = ( argInputRoot, argCallback ) => {
+    static getTreeCopiedWithValuesProcessedViaCallback = (
+        argInputRoot,
+        argCallback
+    ) => {
         //
         // Process single values
         //
-        let outputRoot
-        const enumIntDataType = _helperEnumDataTypes.getEnumDataType( argInputRoot )
-        switch ( enumIntDataType ) {
+        let outputRoot;
+        const enumIntDataType =
+            _helperEnumDataTypes.getEnumDataType(argInputRoot);
+        switch (enumIntDataType) {
             case _helperEnumDataTypes.fieldArray:
-                outputRoot = []
-                break
-
+                outputRoot = [];
+                break;
             case _helperEnumDataTypes.fieldObject:
-                outputRoot = {}
-                break
-
-            default: return argCallback( argInputRoot )
+                outputRoot = {};
+                break;
+            default:
+                return argCallback(argInputRoot);
         }
         //
         // Setup stack
         //
-        const arrayStack = []
+        const arrayStack = [];
         arrayStack.push(
             new _HelperItemForStack(
                 argInputRoot,
                 outputRoot,
                 enumIntDataType,
                 argCallback,
-                arrayStack,
+                arrayStack
             )
-        )
+        );
         //
         // Process values throughout tree
         //
-        while ( arrayStack.length !== 0 ) {
-
-            const itemHelperItemForStack = arrayStack.pop()
-            switch ( itemHelperItemForStack.fieldInputOneEnumDataType ) {
-
+        while (arrayStack.length !== 0) {
+            const itemHelperItemForStack = arrayStack.pop();
+            switch (itemHelperItemForStack.fieldInputOneEnumDataType) {
                 case _helperEnumDataTypes.fieldArray:
-                    helperCopyingWithCallback._processArrayWithCallback( itemHelperItemForStack )
-                    break
-
+                    helperCopyingWithCallback._processArrayWithCallback(
+                        itemHelperItemForStack
+                    );
+                    break;
                 case _helperEnumDataTypes.fieldObject:
-                    helperCopyingWithCallback._processObjectWithCallback( itemHelperItemForStack )
-                    break
-
+                    helperCopyingWithCallback._processObjectWithCallback(
+                        itemHelperItemForStack
+                    );
+                    break;
                 // If itemInput isn't iterable, then do nothing because we already added the necessary values
-                default : break
+                default:
+                    break;
             }
         }
-        return outputRoot
-    }
+        return outputRoot;
+    };
     //
     // Private
     //
     /**
      * @param {_HelperItemForStack} argHelperItemForStack
      * */
-    static _processArrayWithCallback = ( argHelperItemForStack ) => {
+    static _processArrayWithCallback = (argHelperItemForStack) => {
+        const callback = argHelperItemForStack.fieldCallback;
+        const input = argHelperItemForStack.fieldInput;
+        const output = argHelperItemForStack.fieldOutput;
+        const stack = argHelperItemForStack.fieldStack;
 
-        const callback = argHelperItemForStack.fieldCallback
-        const input = argHelperItemForStack.fieldInput
-        const output = argHelperItemForStack.fieldOutput
-        const stack = argHelperItemForStack.fieldStack
-
-        for ( let itemIntIndex = 0, intLength = input.length; itemIntIndex < intLength; itemIntIndex++ ) {
-
-            const itemInputSub = input[ itemIntIndex ]
-
-            const itemEnumDataTypeInputSub = _helperEnumDataTypes.getEnumDataType( itemInputSub )
-            switch ( itemEnumDataTypeInputSub ) {
-
+        let itemIntIndex = -1;
+        const intLength = input.length;
+        while (++itemIntIndex < intLength) {
+            const itemInputSub = input[itemIntIndex];
+            const itemEnumDataTypeInputSub =
+                _helperEnumDataTypes.getEnumDataType(itemInputSub);
+            switch (itemEnumDataTypeInputSub) {
                 case _helperEnumDataTypes.fieldArray:
                     //
                     // Create array and add to output
                     //
-                    const itemOutputSubArray = new Array( itemInputSub.length )
-                    output[ itemIntIndex ] = itemOutputSubArray
+                    const itemOutputSubArray = new Array(itemInputSub.length);
+                    output[itemIntIndex] = itemOutputSubArray;
                     //
                     // Prep next iteration
                     //
@@ -231,17 +232,16 @@ export default class helperCopyingWithCallback {
                             itemOutputSubArray,
                             _helperEnumDataTypes.fieldArray,
                             callback,
-                            stack,
+                            stack
                         )
-                    )
-                    break
-
+                    );
+                    break;
                 case _helperEnumDataTypes.fieldObject:
                     //
                     // Create object and add to output
                     //
-                    const itemOutputSubObject = {}
-                    output[ itemIntIndex ] = itemOutputSubObject
+                    const itemOutputSubObject = {};
+                    output[itemIntIndex] = itemOutputSubObject;
                     //
                     // Prep next iteration
                     //
@@ -251,46 +251,42 @@ export default class helperCopyingWithCallback {
                             itemOutputSubObject,
                             _helperEnumDataTypes.fieldObject,
                             callback,
-                            stack,
+                            stack
                         )
-                    )
-                    break
-
+                    );
+                    break;
                 default:
-                    //
-                    // Process value and add to output
-                    //
-                    output[ itemIntIndex ] = callback( itemInputSub )
-                    break
+                    output[itemIntIndex] = callback(itemInputSub);
+                    break;
             }
         }
-    }
+    };
 
     /**
      * @param {_HelperItemForStack} argHelperItemForStack
      * */
-    static _processObjectWithCallback = ( argHelperItemForStack ) => {
+    static _processObjectWithCallback = (argHelperItemForStack) => {
+        const callback = argHelperItemForStack.fieldCallback;
+        const input = argHelperItemForStack.fieldInput;
+        const output = argHelperItemForStack.fieldOutput;
+        const stack = argHelperItemForStack.fieldStack;
 
-        const callback = argHelperItemForStack.fieldCallback
-        const input = argHelperItemForStack.fieldInput
-        const output = argHelperItemForStack.fieldOutput
-        const stack = argHelperItemForStack.fieldStack
+        const arrayKeys = Object.keys(input);
 
-        const arrayKeys = Object.keys( input )
-        for ( let itemIntIndex = 0, intLength = arrayKeys.length; itemIntIndex < intLength; itemIntIndex++ ) {
-
-            const itemKey = arrayKeys[ itemIntIndex ]
-            const itemInputSub = input[ itemKey ]
-
-            const itemEnumDataTypeInputSub = _helperEnumDataTypes.getEnumDataType( itemInputSub )
-            switch ( itemEnumDataTypeInputSub ) {
-
+        let itemIntIndex = -1;
+        const intLength = arrayKeys.length;
+        while (++itemIntIndex < intLength) {
+            const itemKey = arrayKeys[itemIntIndex];
+            const itemInputSub = input[itemKey];
+            const itemEnumDataTypeInputSub =
+                _helperEnumDataTypes.getEnumDataType(itemInputSub);
+            switch (itemEnumDataTypeInputSub) {
                 case _helperEnumDataTypes.fieldArray:
                     //
                     // Create array and add to output
                     //
-                    const itemOutputSubArray = new Array( itemInputSub.length )
-                    output[ itemKey ] = itemOutputSubArray
+                    const itemOutputSubArray = new Array(itemInputSub.length);
+                    output[itemKey] = itemOutputSubArray;
                     //
                     // Prep next iteration
                     //
@@ -300,17 +296,16 @@ export default class helperCopyingWithCallback {
                             itemOutputSubArray,
                             _helperEnumDataTypes.fieldArray,
                             callback,
-                            stack,
+                            stack
                         )
-                    )
-                    break
-
+                    );
+                    break;
                 case _helperEnumDataTypes.fieldObject:
                     //
                     // Create object and add to output
                     //
-                    const itemOutputSubObject = {}
-                    output[ itemKey ] = itemOutputSubObject
+                    const itemOutputSubObject = {};
+                    output[itemKey] = itemOutputSubObject;
                     //
                     // Prep next iteration
                     //
@@ -320,74 +315,14 @@ export default class helperCopyingWithCallback {
                             itemOutputSubObject,
                             _helperEnumDataTypes.fieldObject,
                             callback,
-                            stack,
+                            stack
                         )
-                    )
-                    break
-
+                    );
+                    break;
                 default:
-                    //
-                    // Process value and add to output
-                    //
-                    output[ itemKey ] = callback( itemInputSub )
-                    break
+                    output[itemKey] = callback(itemInputSub);
+                    break;
             }
         }
-    }
+    };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

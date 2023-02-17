@@ -9,71 +9,21 @@ class HelpersErrors {
      * @param {Error} argError
      * @returns Error
      * */
-    raiseError = ( argError ) => {
-        if ( this.fieldBoolHaltAppOnError ) {
-            console.log( argError )
-            process.exit( 1 )
+    raiseError = (argError) => {
+        if (this.fieldBoolHaltAppOnError) {
+            throw argError;
         }
-        return argError
-    }
+        return argError;
+    };
     //
     // Setup
     //
     constructor() {
-        this.fieldBoolHaltAppOnError = false
+        this.fieldBoolHaltAppOnError = false;
     }
 }
 //
 // Public
 //
-let helperErrors
-export default helperErrors = new HelpersErrors()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+let helperErrors;
+export default helperErrors = new HelpersErrors();

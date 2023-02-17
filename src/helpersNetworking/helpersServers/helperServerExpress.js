@@ -4,17 +4,16 @@ npm i express
 //
 // Libraries - downloaded
 //
-import express from "express"
+import express from "express";
 import helperErrors from "../../helpersErrors/helperErrors.js";
 //
 // Globals
 //
 class enumRestMethods {
-
-    static methodDelete = "delete"
-    static methodGet = "get"
-    static methodPost = "post"
-    static methodPut = "put"
+    static methodDelete = "delete";
+    static methodGet = "get";
+    static methodPost = "post";
+    static methodPut = "put";
 }
 //
 // Public
@@ -23,7 +22,7 @@ export default class HelperServerExpress {
     //
     // Public
     //
-    static fieldEnumRestMethods = enumRestMethods
+    static fieldEnumRestMethods = enumRestMethods;
     //
     // Public - add
     //
@@ -33,27 +32,27 @@ export default class HelperServerExpress {
      * @param {Function} argCallbackWithReqAndRes
      * @returns Error | null
      * */
-    addCallbackToRouter( argEnumRestMethod, argStringRoute, argCallbackWithReqAndRes ) {
-
-        console.log( `Setting command: ${argEnumRestMethod} for route: ${argStringRoute}...` )
-
-        const arrayOfStringKeys = Object.keys( this.fieldServer )
-        if ( arrayOfStringKeys.includes( argEnumRestMethod ) ) {
-
-            this.fieldServer[ argEnumRestMethod ](
-                argStringRoute,
-                ( req, res ) => argCallbackWithReqAndRes( req, res )
-            )
-            return null
-
+    addCallbackToRouter = (
+        argEnumRestMethod,
+        argStringRoute,
+        argCallbackWithReqAndRes
+    ) => {
+        console.log(
+            `Setting command: ${argEnumRestMethod} for route: ${argStringRoute}...`
+        );
+        if (Object.keys(this.fieldServer).includes(argEnumRestMethod)) {
+            this.fieldServer[argEnumRestMethod](argStringRoute, (req, res) =>
+                argCallbackWithReqAndRes(req, res)
+            );
+            return null;
         } else {
-            return helperErrors.raiseError( Error(
-                `Failed to set command: ${argEnumRestMethod} for route: ${argStringRoute}`
-            ) )
+            return helperErrors.raiseError(
+                Error(
+                    `Failed to set command: ${argEnumRestMethod} for route: ${argStringRoute}`
+                )
+            );
         }
-
-    }
-
+    };
     //
     // Public - run
     //
@@ -61,11 +60,10 @@ export default class HelperServerExpress {
      * @returns this
      * */
     runServer() {
-        this.fieldServer.listen(
-            this.fieldIntPort,
-            () => console.log( `Server listening on port: ${this.fieldIntPort}` ),
-        )
-        return this
+        this.fieldServer.listen(this.fieldIntPort, () =>
+            console.log(`Server listening on port: ${this.fieldIntPort}`)
+        );
+        return this;
     }
     //
     // Public - set
@@ -76,38 +74,18 @@ export default class HelperServerExpress {
      * @param {number} argIntPort
      * @returns this
      * */
-    setPort( argIntPort ) {
-        this.fieldIntPort = argIntPort
-        return this
+    setPort(argIntPort) {
+        this.fieldIntPort = argIntPort;
+        return this;
     }
     //
     // Setup
     //
     constructor() {
-        this.fieldIntPort = 8001
-        this.fieldServer = express()
+        this.fieldIntPort = 8001;
+        this.fieldServer = express();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
     addCallbackToRouter( argEnumRestType: string, argStringRoute: string, argCallbackWithReqAndRes: Function ): null | Error {
@@ -159,29 +137,3 @@ export default class HelperServerExpress {
 
     }
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

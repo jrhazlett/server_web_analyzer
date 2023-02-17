@@ -24,12 +24,14 @@ import helperDataXml from "../../helpersData/helperDataXml.js";
 // Public
 //
 export default class helperApiClientSoap {
-
+    //
+    // Public - get
+    //
     /**
      * @param {string} argStringUrl
      * @param {string} argStringXmlPayload
      * */
-    static getWsoExample = async ( argStringUrl, argStringXmlPayload ) => {
+    static getWsoExample = async (argStringUrl, argStringXmlPayload) => {
         /*
         Example url and payload:
         http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso
@@ -43,27 +45,35 @@ export default class helperApiClientSoap {
             </soap:Body>
         </soap:Envelope>
         */
-        const stringContentType = "text/xml; charset=utf-8"
+        const stringContentType = "text/xml; charset=utf-8";
 
-        console.log( `Sending (${stringContentType})-style axios request to url: ${argStringUrl}...` )
-        let response = await axios( {
+        console.log(
+            `Sending (${stringContentType})-style axios request to url: ${argStringUrl}...`
+        );
+        let response = await axios({
             data: argStringXmlPayload,
-            headers: { 'Content-Type' : stringContentType },
+            headers: { "Content-Type": stringContentType },
             method: "POST",
-            timeout: helperApiClientSoap._getIntSeconds( 1 ),
+            timeout: helperApiClientSoap._getIntSeconds(1),
             url: argStringUrl,
-            validateStatus: ( status ) => true,
-        } )
-        console.log( `Sending (${stringContentType})-style axios request to url: ${argStringUrl}...DONE\n` )
-        return response
-    }
+            validateStatus: (status) => true,
+        });
+        console.log(
+            `Sending (${stringContentType})-style axios request to url: ${argStringUrl}...DONE\n`
+        );
+        return response;
+    };
 
     /**
      * @param {string} argStringUrl
      * @param {string} argStringXmlForRequest
      * @param {Object} argObjectHeaders
      * */
-    static getObjectResponseViaRequest = async ( argStringUrl, argStringXmlForRequest, argObjectHeaders ) => {
+    static getObjectResponseViaRequest = async (
+        argStringUrl,
+        argStringXmlForRequest,
+        argObjectHeaders
+    ) => {
         /*
         Response has at least the following major attributes:
         response.headers
@@ -82,7 +92,7 @@ export default class helperApiClientSoap {
            </soapenv:Body>
         </soapenv:Envelope>
         */
-        console.log( `Sending soap request to url: ${argStringUrl}...` )
+        console.log(`Sending soap request to url: ${argStringUrl}...`);
         //
         // Reminder: The object returned by soapRequest() is actually a wrapper for the actual response
         // This is the returned object's only attribute (verified via Object.keys())
@@ -90,47 +100,53 @@ export default class helperApiClientSoap {
         //
         const { response } = await soapRequest({
             headers: argObjectHeaders,
-            timeout: helperApiClientSoap._getIntSeconds( 1 ),
+            timeout: helperApiClientSoap._getIntSeconds(1),
             url: argStringUrl,
             xml: argStringXmlForRequest,
-        } )
-        console.log( `Sending soap request to url: ${argStringUrl}...DONE\n` )
-        return response
-    }
+        });
+        console.log(`Sending soap request to url: ${argStringUrl}...DONE\n`);
+        return response;
+    };
 
     /**
      * @param {Object} argResponse
      * */
-    static getIntResponseCodeFromResponse = ( argResponse ) => { return argResponse.statusCode }
+    static getIntResponseCodeFromResponse = (argResponse) =>
+        argResponse.statusCode;
 
     /**
      * @param {string} argStringPathFileXml
      * @returns Object
      * */
-    static getObjectDataFromFileXML = ( argStringPathFileXml ) => { return helperDataXml.getObjectFromXml( fs.readFileSync( argStringPathFileXml, "utf-8", ) ) }
+    static getObjectDataFromFileXML = (argStringPathFileXml) =>
+        helperDataXml.getObjectFromXml(
+            fs.readFileSync(argStringPathFileXml, "utf-8")
+        );
 
     /**
      * @param {Object} argObjectResponse
      * */
-    static getObjectDataFromResponse = ( argObjectResponse ) => { return helperDataXml.getObjectFromXml( argObjectResponse.body ) }
+    static getObjectDataFromResponse = (argObjectResponse) =>
+        helperDataXml.getObjectFromXml(argObjectResponse.body);
 
     /**
      * @param {string} argStringUrlSoapAction
      * @returns Object
      * */
-    static getObjectHeadersForSoapRequest = ( argStringUrlSoapAction ) => {
-        return {
-            'Content-Type': 'text/xml;charset=UTF-8',
-            'soapAction': argStringUrlSoapAction,
-            'user-agent': 'sampleTest',
-        }
-    }
+    static getObjectHeadersForSoapRequest = (argStringUrlSoapAction) => ({
+        "Content-Type": "text/xml;charset=UTF-8",
+        soapAction: argStringUrlSoapAction,
+        "user-agent": "sampleTest",
+    });
 
     /**
      * @param {Object} argObjectResponse
      * */
-    static getStringXmlDataFromResponse = ( argObjectResponse ) => { return argObjectResponse.body }
-
+    static getStringXmlDataFromResponse = (argObjectResponse) =>
+        argObjectResponse.body;
+    //
+    // Public - print
+    //
     /**
      * This func intentionally prints the status code last so its always visible by the time everything
      * finishes printing.
@@ -140,78 +156,20 @@ export default class helperApiClientSoap {
      *
      * Default the print depth to 3 since the response bodies test to be pretty wordy
      * */
-    static printResponse = ( argResponse, argIntDepthToPrint = 3 ) => {
-
-        // Reminder: Leave 'headers' here as a reminder that this attribute is available and
-        // might be important later.
-        let { headers, body, statusCode } = argResponse
-
-        body = helperDataXml.getObjectFromXml( body )
-
-        prettyPrinterForHumans.pprint(
-            body,
-            {
-                argStringNameToOutput: "body",
-                argIntDepthToPrint: argIntDepthToPrint,
-            }
-        )
-        console.log( `statusCode = ${statusCode}\n` )
-    }
+    static printResponse = (argResponse, argIntDepthToPrint = 3) => {
+        //
+        // Reminder: 'headers' is also a key available in argResponse
+        //
+        let { body, statusCode } = argResponse;
+        prettyPrinterForHumans.pprint(helperDataXml.getObjectFromXml(body), {
+            argStringNameToOutput: "body",
+            argIntDepthToPrint: argIntDepthToPrint,
+        });
+        console.log(`statusCode = ${statusCode}\n`);
+    };
 
     /**
      * @param {number} argIntSecs
      * */
-    static _getIntSeconds = ( argIntSecs ) => {
-
-        return argIntSecs * 1000
-
-    }
+    static _getIntSeconds = (argIntSecs) => argIntSecs * 1000;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

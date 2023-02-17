@@ -25,53 +25,68 @@ export default class helperValidatorHtmlTags {
      * Example valid path: //div//h1
      * Example invalid path: //dev//h1
      * */
-    static getErrorIfXpathDoesNotHaveOnlyStandardTasks = ( argStringXpath ) => {
-
-        const arrayOfInvalidTags = helperValidatorHtmlTags._getArrayOfInvalidTags( argStringXpath )
-
-        if ( arrayOfInvalidTags.length > 0 ) {
-            return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( [
-                "argStringXpath is not exclusively standard tags",
-                `argStringXpath = ${argStringXpath}`,
-                `arrayOfInvalidTags = ${helperStrings.getStringPrintableFromIterable(arrayOfInvalidTags)}`,
-                " ",
-            ], "\n", ) ) )
-        }
-    }
+    static getErrorIfXpathDoesNotHaveOnlyStandardTasks = (argStringXpath) => {
+        const arrayOfInvalidTags =
+            helperValidatorHtmlTags._getArrayOfInvalidTags(argStringXpath);
+        return arrayOfInvalidTags.length <= 0
+            ? undefined
+            : helperErrors.raiseError(
+                  Error(
+                      helperStrings.getStringByCombiningArray(
+                          [
+                              "argStringXpath is not exclusively standard tags",
+                              `argStringXpath = ${argStringXpath}`,
+                              `arrayOfInvalidTags = ${helperStrings.getStringPrintableFromIterable(
+                                  arrayOfInvalidTags
+                              )}`,
+                              " ",
+                          ],
+                          "\n"
+                      )
+                  )
+              );
+    };
 
     /**
      * @param {string} argStringXpath
-     * @returns []
+     * @returns {string[]}
      * */
-    static _getArrayOfInvalidTags = ( argStringXpath ) => {
-
-        const arrayOfSubStrings = argStringXpath.split( "/" )
-
-        const arrayToReturn = []
-        for ( let itemIndex = 0, intLength = arrayOfSubStrings.length; itemIndex < intLength; itemIndex++ ) {
-
-            let itemString = arrayOfSubStrings[ itemIndex ]
-
-            if ( itemString.length > 0 ) {
-
-                itemString = helperValidatorHtmlTags._getStringMostLikelyTag( itemString )
-                if ( !helperValidatorHtmlTags.logicStringIsValidHtmlTagNoAngleBrackets( itemString ) ) { arrayToReturn.push( itemString ) }
+    static _getArrayOfInvalidTags = (argStringXpath) => {
+        const arrayOfSubStrings = argStringXpath.split("/");
+        const arrayToReturn = [];
+        let itemIndex = -1;
+        const intLength = arrayOfSubStrings.length;
+        while (++itemIndex < intLength) {
+            let itemString = arrayOfSubStrings[itemIndex];
+            if (itemString.length > 0) {
+                itemString =
+                    helperValidatorHtmlTags._getStringMostLikelyTag(itemString);
+                if (
+                    !helperValidatorHtmlTags.logicStringIsValidHtmlTagNoAngleBrackets(
+                        itemString
+                    )
+                ) {
+                    arrayToReturn.push(itemString);
+                }
             }
         }
-        return arrayToReturn
-    }
+        return arrayToReturn;
+    };
 
     /**
      * @param {string} argString
+     * @returns {string}
      * */
-    static _getStringMostLikelyTag = ( argString ) => {
-
-        if ( argString.length === 0 ) { return argString }
-
-        if ( argString.includes( "[" ) ) { return argString.split( "[" )[ 0 ] }
-
-        return argString
-    }
+    static _getStringMostLikelyTag = (argString) => {
+        switch (true) {
+            case argString.length === 0:
+                return argString;
+            case argString.includes("["):
+                return argString.split("[")[0];
+            default:
+                return argString;
+        }
+    };
     //
     // Public - logic
     //
@@ -79,15 +94,21 @@ export default class helperValidatorHtmlTags {
      * Reminder: This check includes '<>' checks
      *
      * @param {string} argString
+     * @returns {boolean}
      * */
-    static logicStringIsValidHtmlTag = ( argString ) => { return helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS.has( argString ) }
+    static logicStringIsValidHtmlTag = (argString) =>
+        helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS.has(argString);
 
     /**
      * Reminder: strings missing '<>' *will* return false
      *
      * @param {string} argString
+     * @returns {boolean}
      * */
-    static logicStringIsValidHtmlTagNoAngleBrackets = ( argString ) => { return helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has( argString ) }
+    static logicStringIsValidHtmlTagNoAngleBrackets = (argString) =>
+        helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has(
+            argString
+        );
 
     /**
      * Returns 'false' if not all tags exist in the standard set
@@ -95,49 +116,50 @@ export default class helperValidatorHtmlTags {
      * so use judiciously
      *
      * @param {string} argStringXpath
+     * @returns {boolean}
      * */
-    static logicXpathHasOnlyStandardHtmlTags = ( argStringXpath ) => {
+    static logicXpathHasOnlyStandardHtmlTags = (argStringXpath) => {
         //
         // A complex
         //
-        const arrayOfSubStrings = argStringXpath.split( "/" )
-        for ( let itemIndex = 0, intLength = arrayOfSubStrings.length; itemIndex < intLength; itemIndex++ ) {
-
-            const itemSubString = arrayOfSubStrings[ itemIndex ]
+        const arrayOfSubStrings = argStringXpath.split("/");
+        let itemIndex = -1;
+        const intLength = arrayOfSubStrings.length;
+        while (++itemIndex < intLength) {
+            const itemSubString = arrayOfSubStrings[itemIndex];
             //
             // If string contains characters, then do the check
             // If its empty, then just move onto the next substring
             //
-            if ( itemSubString.length > 0 ) {
-                if ( !helperValidatorHtmlTags._logicStringUsesHtmlTagStandardWithoutSlashes( itemSubString ) ) { return false }
+            if (itemSubString.length > 0) {
+                //
+                // If there's '[' in the string, then its likely something like 'div[@id]'
+                //
+                const itemBoolStringUsesHtmlTagStandardWithoutSlashed =
+                    itemSubString.includes("[")
+                        ? //
+                          // The first item here will be the most likely tag
+                          //
+                          helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has(
+                              itemSubString.split("[")[0]
+                          )
+                        : //
+                          // If there's no '[' in the string, then the string is likely something like 'div'
+                          //
+                          helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has(
+                              itemSubString
+                          );
+
+                if (!itemBoolStringUsesHtmlTagStandardWithoutSlashed) {
+                    return false;
+                }
             }
         }
         //
         // If we get this far, then all strings checked exist in the set of valid types
         //
-        return true
-    }
-
-    /**
-     * This func assumes the string lacks slashes
-     *
-     * @param {string} argStringWithoutSlashes
-     * */
-    static _logicStringUsesHtmlTagStandardWithoutSlashes = ( argStringWithoutSlashes ) => {
-        //
-        // If there's '[' in the string, then its likely something like 'div[@id]'
-        //
-        if ( argStringWithoutSlashes.includes( "[" ) ) {
-            //
-            // The first item here will be the most likely tag
-            //
-            return helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has( argStringWithoutSlashes.split( "[" )[ 0 ] )
-        }
-        //
-        // If there's no '[' in the string, then the string is likely something like 'div'
-        //
-        return helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has( argStringWithoutSlashes )
-    }
+        return true;
+    };
     //
     // Public - static attributes
     // Reminder: Its down here because, lets be honest, the list is massive
@@ -269,64 +291,18 @@ export default class helperValidatorHtmlTags {
         "<var>",
         "<video>",
         "<wbr>",
-    ]
-    static FIELD_SET_OF_STANDARD_HTML_TAGS = new Set( helperValidatorHtmlTags.FIELD_ARRAY_OF_STANDARD_HTML_TAGS )
+    ];
+    static FIELD_SET_OF_STANDARD_HTML_TAGS = new Set(
+        helperValidatorHtmlTags.FIELD_ARRAY_OF_STANDARD_HTML_TAGS
+    );
     //
     // Reminder: This contains all tags, but they all lack '<>'
     //
-    static FIELD_ARRAY_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS = helperValidatorHtmlTags.FIELD_ARRAY_OF_STANDARD_HTML_TAGS.map( itemString => itemString.replace( /\<|\>/g, "", ) )
-    static FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS = new Set( helperValidatorHtmlTags.FIELD_ARRAY_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS )
+    static FIELD_ARRAY_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS =
+        helperValidatorHtmlTags.FIELD_ARRAY_OF_STANDARD_HTML_TAGS.map(
+            (itemString) => itemString.replace(/\<|\>/g, "")
+        );
+    static FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS = new Set(
+        helperValidatorHtmlTags.FIELD_ARRAY_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS
+    );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

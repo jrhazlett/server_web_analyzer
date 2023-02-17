@@ -39,43 +39,39 @@ class _helperEnumDataTypes {
      * @param {number} argEnumType
      * @returns {any}
      * */
-    static getEmptyValueOfComplexTypeViaEnumType = ( argEnumType ) => {
-        switch ( argEnumType ) {
-            case _helperEnumDataTypes.fieldArray: return []
-            case _helperEnumDataTypes.fieldError: return new Error()
-            case _helperEnumDataTypes.fieldMap: return new Map()
-            case _helperEnumDataTypes.fieldObject: return {}
-            case _helperEnumDataTypes.fieldSet: return new Set()
-            default: return undefined
+    static getEmptyValueOfComplexTypeViaEnumType = (argEnumType) => {
+        switch (argEnumType) {
+            case _helperEnumDataTypes.fieldArray:
+                return [];
+            case _helperEnumDataTypes.fieldError:
+                return new Error();
+            case _helperEnumDataTypes.fieldMap:
+                return new Map();
+            case _helperEnumDataTypes.fieldObject:
+                return {};
+            case _helperEnumDataTypes.fieldSet:
+                return new Set();
+            default:
+                return undefined;
         }
-    }
+    };
 
     /**
      * @param {any} arg
      * @returns number
      * */
-    static getEnumDataType = ( arg ) => {
+    static getEnumDataType = (arg) => {
         switch (typeof arg) {
-            //
-            // Function
-            //
-            case "function": return _helperEnumDataTypes.fieldFunction;
-            //
-            // Object
-            //
-            case "object": return _helperEnumDataTypes._getEnumDataTypeForObject(arg);
-            //
-            // Symbol
-            //
-            // Reminder: This is important because symbols do *not* support `${}` string conversions
-            case "symbol": return _helperEnumDataTypes.fieldSymbol;
-
-            case "undefined": return _helperEnumDataTypes.fieldEitherNonIterableOrString;
-            //
-            // All other cases
-            //
-            // If we get this far, then all other possibilities have been ruled out
-            default: return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            case "function":
+                return _helperEnumDataTypes.fieldFunction;
+            case "object":
+                return _helperEnumDataTypes._getEnumDataTypeForObject(arg);
+            case "symbol":
+                return _helperEnumDataTypes.fieldSymbol;
+            case "undefined":
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            default:
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
         }
     };
 
@@ -83,15 +79,22 @@ class _helperEnumDataTypes {
      * @param {Object} argObject
      * @return number
      * */
-    static _getEnumDataTypeForObject = ( argObject ) => {
+    static _getEnumDataTypeForObject = (argObject) => {
         switch (true) {
-            case Array.isArray(argObject): return _helperEnumDataTypes.fieldArray;
-            case argObject instanceof Error: return _helperEnumDataTypes.fieldError;
-            case argObject instanceof Map: return _helperEnumDataTypes.fieldMap;
-            case argObject === null: return _helperEnumDataTypes.fieldEitherNonIterableOrString;
-            case argObject instanceof Promise: return _helperEnumDataTypes.fieldPromise;
-            case argObject instanceof Set: return _helperEnumDataTypes.fieldSet;
-            default: return _helperEnumDataTypes.fieldObject;
+            case Array.isArray(argObject):
+                return _helperEnumDataTypes.fieldArray;
+            case argObject instanceof Error:
+                return _helperEnumDataTypes.fieldError;
+            case argObject instanceof Map:
+                return _helperEnumDataTypes.fieldMap;
+            case argObject === null:
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            case argObject instanceof Promise:
+                return _helperEnumDataTypes.fieldPromise;
+            case argObject instanceof Set:
+                return _helperEnumDataTypes.fieldSet;
+            default:
+                return _helperEnumDataTypes.fieldObject;
         }
     };
 
@@ -99,7 +102,8 @@ class _helperEnumDataTypes {
      * @param {number} argEnumType
      * @returns boolean
      * */
-    static isEnumTypeToProcess = ( argEnumType ) => { return _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType) }
+    static isEnumTypeToProcess = (argEnumType) =>
+        _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType);
 }
 //
 // Class
@@ -121,18 +125,19 @@ class _HelperItemForStack {
         argInputOneEnumDataType,
         argInputTwo,
         argInputTwoEnumDataType,
-        argStack ,
+        argStack,
         argSetTrackerForCircularReferences
     ) {
-        this.fieldInputOne = argInputOne
-        this.fieldInputOneEnumDataType = argInputOneEnumDataType
+        this.fieldInputOne = argInputOne;
+        this.fieldInputOneEnumDataType = argInputOneEnumDataType;
 
-        this.fieldInputTwo = argInputTwo
-        this.fieldInputTwoEnumDataType = argInputTwoEnumDataType
+        this.fieldInputTwo = argInputTwo;
+        this.fieldInputTwoEnumDataType = argInputTwoEnumDataType;
 
-        this.fieldStack = argStack
+        this.fieldStack = argStack;
 
-        this.fieldSetTrackerForCircularReferences = argSetTrackerForCircularReferences
+        this.fieldSetTrackerForCircularReferences =
+            argSetTrackerForCircularReferences;
     }
 }
 //
@@ -140,33 +145,39 @@ class _HelperItemForStack {
 //
 export default class helperCompareTrees {
     //
-    // Public
+    // Public - is
     //
     /**
      * @param {any} argRootInputOne
      * @param {any} argRootInputTwo
      * @returns boolean
      * */
-    static logicTreeContentsAreEqual = ( argRootInputOne, argRootInputTwo ) => {
+    static isTreeContentsEqual = (argRootInputOne, argRootInputTwo) => {
+        const setTrackerForCircularReferences = new Set();
 
-        const setTrackerForCircularReferences = new Set()
-
-        const enumTypeForArgTreeOne = _helperEnumDataTypes.getEnumDataType( argRootInputOne )
-        const enumTypeForArgTreeTwo = _helperEnumDataTypes.getEnumDataType( argRootInputTwo )
+        const enumTypeForArgTreeOne =
+            _helperEnumDataTypes.getEnumDataType(argRootInputOne);
+        const enumTypeForArgTreeTwo =
+            _helperEnumDataTypes.getEnumDataType(argRootInputTwo);
         //
         // Return false if roots are not the same type
         //
-        if ( enumTypeForArgTreeOne !== enumTypeForArgTreeTwo ) { return false }
+        if (enumTypeForArgTreeOne !== enumTypeForArgTreeTwo) {
+            return false;
+        }
         //
         // If roots are not iterable then do a simple comparison
         //
-        if ( enumTypeForArgTreeOne === _helperEnumDataTypes.fieldEitherNonIterableOrString ) {
-            return argRootInputOne === argRootInputTwo
+        if (
+            enumTypeForArgTreeOne ===
+            _helperEnumDataTypes.fieldEitherNonIterableOrString
+        ) {
+            return argRootInputOne === argRootInputTwo;
         }
         //
         // Setup stack
         //
-        const arrayStackToProcess = []
+        const arrayStackToProcess = [];
         arrayStackToProcess.push(
             new _HelperItemForStack(
                 argRootInputOne,
@@ -174,58 +185,73 @@ export default class helperCompareTrees {
                 argRootInputTwo,
                 enumTypeForArgTreeTwo,
                 arrayStackToProcess,
-                setTrackerForCircularReferences,
+                setTrackerForCircularReferences
             )
-        )
+        );
         //
         // Process stack
         //
-        while ( arrayStackToProcess.length !== 0 ) {
-
-            const itemHelperItemForStack = arrayStackToProcess.pop()
-
-            if ( itemHelperItemForStack !== undefined ) {
-
-                const itemInputOneEnumDataType = itemHelperItemForStack.fieldInputOneEnumDataType
-                const itemInputTwoEnumDataType = itemHelperItemForStack.fieldInputTwoEnumDataType
+        while (arrayStackToProcess.length !== 0) {
+            const itemHelperItemForStack = arrayStackToProcess.pop();
+            if (itemHelperItemForStack !== undefined) {
+                const itemInputOneEnumDataType =
+                    itemHelperItemForStack.fieldInputOneEnumDataType;
                 //
                 // If the data types don't match, then return false
                 //
-                if ( itemInputOneEnumDataType !== itemInputTwoEnumDataType ) { return false }
-
-                const itemInputOne = itemHelperItemForStack.fieldInputOne
-                const itemInputTwo = itemHelperItemForStack.fieldInputTwo
+                if (
+                    itemInputOneEnumDataType !==
+                    itemHelperItemForStack.fieldInputTwoEnumDataType
+                ) {
+                    return false;
+                }
                 //
                 // Once we get this far, we verified both data types already match
                 // Need to do a more in-depth analysis
                 //
-                switch ( itemInputOneEnumDataType ) {
-
+                switch (itemInputOneEnumDataType) {
                     case _helperEnumDataTypes.fieldArray:
                         //
                         // Compare the children and return false if there's a mismatch detected
                         //
-                        if ( !helperCompareTrees._processArrayForCompare( itemHelperItemForStack ) ) { return false }
-                        break
+                        if (
+                            !helperCompareTrees._processArrayForCompare(
+                                itemHelperItemForStack
+                            )
+                        ) {
+                            return false;
+                        }
+                        break;
 
                     case _helperEnumDataTypes.fieldObject:
                         //
                         // Compare the children and return false if there's a mismatch detected
                         //
-                        if ( !helperCompareTrees._processObjectForCompare( itemHelperItemForStack ) ) { return false }
-                        break
+                        if (
+                            !helperCompareTrees._processObjectForCompare(
+                                itemHelperItemForStack
+                            )
+                        ) {
+                            return false;
+                        }
+                        break;
                     //
                     // If itemInputOne is neither an array or an object, then do a basic comparison
                     // This should theoretically never run, except possibly on the first iteration
                     //
                     default:
-                        if ( itemInputOne !== itemInputTwo ) { return false }
-                        break
+                        if (
+                            itemHelperItemForStack.fieldInputOne !==
+                            itemHelperItemForStack.fieldInputTwo
+                        ) {
+                            return false;
+                        }
+                        break;
                 }
             }
         }
-        return true
-    }
+        return true;
+    };
     //
     // Private
     //
@@ -235,38 +261,45 @@ export default class helperCompareTrees {
      *
      * @param {_HelperItemForStack} argHelperItemForStack
      * */
-    static _processArrayForCompare = ( argHelperItemForStack ) => {
-
-        const inputOne = argHelperItemForStack.fieldInputOne
-        const inputTwo = argHelperItemForStack.fieldInputTwo
-        const stackToUpdate = argHelperItemForStack.fieldStack
-        const setTrackerForCircularReferences = argHelperItemForStack.fieldSetTrackerForCircularReferences
+    static _processArrayForCompare = (argHelperItemForStack) => {
+        const inputOne = argHelperItemForStack.fieldInputOne;
+        const inputTwo = argHelperItemForStack.fieldInputTwo;
+        const stackToUpdate = argHelperItemForStack.fieldStack;
+        const setTrackerForCircularReferences =
+            argHelperItemForStack.fieldSetTrackerForCircularReferences;
         //
         // If both arrays aren't the same length, then they can't be equal.
         //
-        if ( inputOne.length !== inputTwo.length ) { return false }
+        if (inputOne.length !== inputTwo.length) {
+            return false;
+        }
 
-        for ( let itemIntIndex = 0, intLength = inputOne.length; itemIntIndex < intLength; itemIntIndex++ ) {
+        for (
+            let itemIntIndex = 0, intLength = inputOne.length;
+            itemIntIndex < intLength;
+            itemIntIndex++
+        ) {
+            const itemInputSubOne = inputOne[itemIntIndex];
+            const itemInputSubTwo = inputTwo[itemIntIndex];
 
-            const itemInputSubOne = inputOne[ itemIntIndex ]
-            const itemInputSubTwo = inputTwo[ itemIntIndex ]
-
-            const itemEnumDataTypeInputSubOne = _helperEnumDataTypes.getEnumDataType( itemInputSubOne )
-            const itemEnumDataTypeInputSubTwo = _helperEnumDataTypes.getEnumDataType( itemInputSubTwo )
+            const itemEnumDataTypeInputSubOne =
+                _helperEnumDataTypes.getEnumDataType(itemInputSubOne);
             //
             // If two data types aren't the same, then they can't be equal. Return false.
             //
-            if ( itemEnumDataTypeInputSubOne !== itemEnumDataTypeInputSubTwo ) { return false }
-
-            switch ( itemEnumDataTypeInputSubOne ) {
-
+            if (
+                itemEnumDataTypeInputSubOne !==
+                _helperEnumDataTypes.getEnumDataType(itemInputSubTwo)
+            ) {
+                return false;
+            }
+            switch (itemEnumDataTypeInputSubOne) {
                 case _helperEnumDataTypes.fieldArray:
-
-                    if ( !setTrackerForCircularReferences.has( itemInputSubOne ) ) {
+                    if (!setTrackerForCircularReferences.has(itemInputSubOne)) {
                         //
                         // Add memory id to set to prevent circular references
                         //
-                        setTrackerForCircularReferences.add( itemInputSubOne )
+                        setTrackerForCircularReferences.add(itemInputSubOne);
                         //
                         // Add child to stack
                         //
@@ -277,19 +310,18 @@ export default class helperCompareTrees {
                                 itemInputSubTwo,
                                 _helperEnumDataTypes.fieldArray,
                                 stackToUpdate,
-                                setTrackerForCircularReferences,
+                                setTrackerForCircularReferences
                             )
-                        )
+                        );
                     }
-                    break
+                    break;
 
                 case _helperEnumDataTypes.fieldObject:
-
-                    if ( !setTrackerForCircularReferences.has( itemInputSubOne ) ) {
+                    if (!setTrackerForCircularReferences.has(itemInputSubOne)) {
                         //
                         // Add memory id to set to prevent circular references
                         //
-                        setTrackerForCircularReferences.add( itemInputSubOne )
+                        setTrackerForCircularReferences.add(itemInputSubOne);
                         //
                         // Add child to stack
                         //
@@ -300,19 +332,21 @@ export default class helperCompareTrees {
                                 itemInputSubTwo,
                                 _helperEnumDataTypes.fieldObject,
                                 stackToUpdate,
-                                setTrackerForCircularReferences,
+                                setTrackerForCircularReferences
                             )
-                        )
+                        );
                     }
-                    break
+                    break;
 
                 default:
-                    if ( itemInputSubOne !== itemInputSubTwo ) { return false }
-                    break
+                    if (itemInputSubOne !== itemInputSubTwo) {
+                        return false;
+                    }
+                    break;
             }
         }
-        return true
-    }
+        return true;
+    };
 
     /**
      * Return true if all diff checks pass; return false if one of them fails
@@ -320,48 +354,48 @@ export default class helperCompareTrees {
      *
      * @param {_HelperItemForStack} argHelperItemForStack
      * */
-    static _processObjectForCompare = ( argHelperItemForStack ) => {
+    static _processObjectForCompare = (argHelperItemForStack) => {
+        const objectInputOne = argHelperItemForStack.fieldInputOne;
+        const objectInputTwo = argHelperItemForStack.fieldInputTwo;
+        const stackToUpdate = argHelperItemForStack.fieldStack;
 
-        const objectInputOne = argHelperItemForStack.fieldInputOne
-        const objectInputTwo = argHelperItemForStack.fieldInputTwo
-        const stackToUpdate = argHelperItemForStack.fieldStack
+        const arrayOfKeysInputOne = Object.keys(objectInputOne);
+        const arrayOfKeysInputTwo = Object.keys(objectInputTwo);
 
-        const arrayOfKeysInputOne = Object.keys( objectInputOne )
-        const arrayOfKeysInputTwo = Object.keys( objectInputTwo )
-
-        const setTrackerForCircularReferences = argHelperItemForStack.fieldSetTrackerForCircularReferences
+        const setTrackerForCircularReferences =
+            argHelperItemForStack.fieldSetTrackerForCircularReferences;
         //
         // If the lengths are not the same, then the objects can't be equal
         //
-        if ( arrayOfKeysInputOne.length !== arrayOfKeysInputTwo.length ) { return false }
+        if (arrayOfKeysInputOne.length !== arrayOfKeysInputTwo.length) {
+            return false;
+        }
 
-        for ( let itemIntIndex = 0, intLength = arrayOfKeysInputOne.length; itemIntIndex < intLength; itemIntIndex++ ) {
-
-            const itemKeyInputOne = arrayOfKeysInputOne[ itemIntIndex ]
-            const itemKeyInputTwo = arrayOfKeysInputTwo[ itemIntIndex ]
-
-            // This compares the memory id's... I think... don't think this is necessary
-            //if ( itemKeyInputOne !== itemKeyInputTwo ) { return false }
-
-            const itemInputOneSub = objectInputOne[ itemKeyInputOne ]
-            const itemInputTwoSub = objectInputTwo[ itemKeyInputTwo ]
-
-            const itemInputOneSubType = _helperEnumDataTypes.getEnumDataType( itemInputOneSub )
-            const itemInputTwoSubType = _helperEnumDataTypes.getEnumDataType( itemInputTwoSub )
+        let itemIntIndex = -1;
+        const intLength = arrayOfKeysInputOne.length;
+        while (++itemIntIndex < intLength) {
+            const itemInputOneSub =
+                objectInputOne[arrayOfKeysInputOne[itemIntIndex]];
+            const itemInputTwoSub =
+                objectInputTwo[arrayOfKeysInputTwo[itemIntIndex]];
+            const itemInputOneSubType =
+                _helperEnumDataTypes.getEnumDataType(itemInputOneSub);
+            const itemInputTwoSubType =
+                _helperEnumDataTypes.getEnumDataType(itemInputTwoSub);
             //
             // If the data types aren't the same, then they can't be equal.
             //
-            if ( itemInputOneSubType !== itemInputTwoSubType ) { return false }
+            if (itemInputOneSubType !== itemInputTwoSubType) {
+                return false;
+            }
 
-            switch ( itemInputOneSubType ) {
-
+            switch (itemInputOneSubType) {
                 case _helperEnumDataTypes.fieldArray:
-
-                    if ( !setTrackerForCircularReferences.has( itemInputOneSub ) ) {
+                    if (!setTrackerForCircularReferences.has(itemInputOneSub)) {
                         //
                         // Add memory id to set to prevent circular references
                         //
-                        setTrackerForCircularReferences.add( itemInputOneSub )
+                        setTrackerForCircularReferences.add(itemInputOneSub);
                         //
                         // Add child to stack
                         //
@@ -372,19 +406,17 @@ export default class helperCompareTrees {
                                 itemInputTwoSub,
                                 itemInputTwoSubType,
                                 stackToUpdate,
-                                setTrackerForCircularReferences,
+                                setTrackerForCircularReferences
                             )
-                        )
+                        );
                     }
-                    break
-
+                    break;
                 case _helperEnumDataTypes.fieldObject:
-
-                    if ( !setTrackerForCircularReferences.has( itemInputOneSub ) ) {
+                    if (!setTrackerForCircularReferences.has(itemInputOneSub)) {
                         //
                         // Add memory id to set to prevent circular references
                         //
-                        setTrackerForCircularReferences.add( itemInputOneSub )
+                        setTrackerForCircularReferences.add(itemInputOneSub);
                         //
                         // Add child to stack
                         //
@@ -395,72 +427,18 @@ export default class helperCompareTrees {
                                 itemInputTwoSub,
                                 itemInputTwoSubType,
                                 stackToUpdate,
-                                setTrackerForCircularReferences,
+                                setTrackerForCircularReferences
                             )
-                        )
+                        );
                     }
-                    break
-
+                    break;
                 default:
-                    if ( itemInputOneSub !== itemInputTwoSub ) { return false }
-                    break
+                    if (itemInputOneSub !== itemInputTwoSub) {
+                        return false;
+                    }
+                    break;
             }
         }
-        return true
-    }
+        return true;
+    };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

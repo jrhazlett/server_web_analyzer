@@ -8,7 +8,8 @@ export default class helperApp {
     /**
      * @param {Function} argCallback
      * */
-    static appendCallbackToArrayToRunOnExit = ( argCallback ) => { process.on( "exit", argCallback, ) }
+    static appendCallbackToArrayToRunOnExit = (argCallback) =>
+        process.on("exit", argCallback);
     //
     // Public - exit
     //
@@ -16,60 +17,12 @@ export default class helperApp {
      * Call this at the end of the app to make sure it closes
      * */
     static exitApp = () => {
-        console.log( "SCRIPT COMPLETE" )
-        process.exit( 0 )
-    }
+        console.log("SCRIPT COMPLETE");
+        process.exit(0);
+    };
     //
     // Public - print
     //
     /***/
-    static printAppStart = () => { console.log( "SCRIPT STARTED...\n" ) }
+    static printAppStart = () => console.log("SCRIPT STARTED...\n");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -25,129 +25,130 @@ import HelperXpathsAndValues from "./helpersXpathsAndValues/helperXpathsAndValue
 // Public
 //
 class helperExampleTasks {
-
     /***/
     static runApiRestRequest = async () => {
+        const stringUrl = "http://localhost:8000/test403";
 
-        const stringUrl = "http://localhost:8000/test403"
-
-        const response = await helperApiClientRest.getResponse( {
-            "method": "GET",
-            "url": stringUrl,
-        } )
-        helperApiClientRest.printResponse( response )
-    }
+        const response = await helperApiClientRest.getResponse({
+            method: "GET",
+            url: stringUrl,
+        });
+        helperApiClientRest.printResponse(response);
+    };
 
     /***/
     static runApiSoapRequest = async () => {
+        console.log("RAN: runApiSoapRequest()\n");
 
-        console.log( "RAN: runApiSoapRequest()\n" )
+        const stringUrl =
+            "https://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php";
+        const stringXml = helperFiles.getStringFromFile(
+            "data/examples/examplesInput/examplesInputSoap/zip-code-envelope.xml"
+        );
 
-        const stringUrl = "https://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php"
-        const stringXml = helperFiles.getStringFromFile( "data/examples/examplesInput/examplesInputSoap/zip-code-envelope.xml" )
+        const stringUrlAction =
+            "https://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl#LatLonListZipCode";
+        const objectHeaders =
+            helperApiClientSoap.getObjectHeadersForSoapRequest(stringUrlAction);
 
-        const stringUrlAction = "https://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl#LatLonListZipCode"
-        const objectHeaders = helperApiClientSoap.getObjectHeadersForSoapRequest( stringUrlAction )
-
-        prettyPrinterForHumans.pprint(
-            objectHeaders,
-            {
-                argStringNameToOutput: "objectHeaders",
-                argStringTrailingSpace: "\n",
-            }
-        )
+        prettyPrinterForHumans.pprint(objectHeaders, {
+            argStringNameToOutput: "objectHeaders",
+            argStringTrailingSpace: "\n",
+        });
 
         const response = await helperApiClientSoap.getObjectResponseViaRequest(
             stringUrl,
             stringXml,
-            objectHeaders,
-        )
-        helperApiClientSoap.printResponse( response )
-    }
+            objectHeaders
+        );
+        helperApiClientSoap.printResponse(response);
+    };
 
     /***/
     static runWebScrapePuppeteer = async () => {
         //
         // Defs
         //
-        const stringUrl = "http://example.com"
+        const stringUrl = "http://example.com";
 
-        const stringXpath = "//div//h1"
+        const stringXpath = "//div//h1";
         //
         // Validation
         //
-        const err = helperValidatorHtmlTags.getErrorIfXpathDoesNotHaveOnlyStandardTasks( stringXpath )
-        if ( err !== undefined ) { console.log( err ) }
+        const err =
+            helperValidatorHtmlTags.getErrorIfXpathDoesNotHaveOnlyStandardTasks(
+                stringXpath
+            );
+        if (err !== undefined) {
+            console.log(err);
+        }
         //
         // Web scrape
         //
-        const helperBrowserPuppeteer = new HelperBrowserPuppeteer()
+        const helperBrowserPuppeteer = new HelperBrowserPuppeteer();
 
         const result = await helperBrowserPuppeteer.getArrayOfStringsViaXpath(
             stringUrl,
             stringXpath,
-            ( ...arrayOfWebElements ) => arrayOfWebElements.map( itemWebElement => itemWebElement.innerText ),
-        )
+            (...arrayOfWebElements) =>
+                arrayOfWebElements.map(
+                    (itemWebElement) => itemWebElement.innerText
+                )
+        );
         //
         // Output
         //
-        prettyPrinterForHumans.pprint(
-            result,
-            {
-                argStringNameToOutput: "result (runCodeExternal)",
-                argStringTrailingSpace: "\n",
-            },
-        )
-    }
+        prettyPrinterForHumans.pprint(result, {
+            argStringNameToOutput: "result (runCodeExternal)",
+            argStringTrailingSpace: "\n",
+        });
+    };
 
     /**
      * WARNING: Right now, the available driver is incompatible with current chrome
      * */
     static runWebScrapeSelenium = async () => {
+        const stringUrl = "http://example.com";
 
-        const stringUrl = "http://example.com"
+        const stringXpath = "//div//h1";
 
-        const stringXpath = "//div//h1"
+        const helperBrowserSelenium = new HelperBrowserSelenium({});
 
-        const helperBrowserSelenium = new HelperBrowserSelenium({})
+        await helperBrowserSelenium.loadUrl(stringUrl);
 
-        await helperBrowserSelenium.loadUrl( stringUrl )
+        const arrayOfStringsLinks =
+            helperBrowserSelenium.getArrayOfStringsLinks();
 
-        const arrayOfStringsLinks = helperBrowserSelenium.getArrayOfStringsLinks()
-
-        prettyPrinterForHumans.pprint(
-            arrayOfStringsLinks,
-            {
-                argStringNameToOutput: "arrayOfStringsLinks",
-                argStringTrailingSpace: "\n",
-            }
-        )
-
-    }
+        prettyPrinterForHumans.pprint(arrayOfStringsLinks, {
+            argStringNameToOutput: "arrayOfStringsLinks",
+            argStringTrailingSpace: "\n",
+        });
+    };
 
     /***/
     static runSubmitFormPuppeteer = async () => {
+        const helperBrowserPuppeteer = new HelperBrowserPuppeteer();
 
-        const helperBrowserPuppeteer = new HelperBrowserPuppeteer()
+        const stringUrl = "http://127.0.0.1:8080/testForm";
 
-        const stringUrl = "http://127.0.0.1:8080/testForm"
+        const stringXpath = "//input[@id='team_name']";
 
-        const stringXpath = "//input[@id='team_name']"
-
-        await helperBrowserPuppeteer.setUrlAndWaitForXpath( stringUrl, stringXpath, )
+        await helperBrowserPuppeteer.setUrlAndWaitForXpath(
+            stringUrl,
+            stringXpath
+        );
 
         const arrayOfPairsStringXpathsAndStringValues = [
-            [
-                stringXpath,
-                "TEST_VALUES",
-            ],
-        ]
-        await helperBrowserPuppeteer.setValuesForFieldsAtXpathsViaArrayOfPairsAndSubmitForm( arrayOfPairsStringXpathsAndStringValues )
-    }
+            [stringXpath, "TEST_VALUES"],
+        ];
+        await helperBrowserPuppeteer.setValuesForFieldsAtXpathsViaArrayOfPairsAndSubmitForm(
+            arrayOfPairsStringXpathsAndStringValues
+        );
+    };
 }
 
 const main = async () => {
-    helperApp.printAppStart()
+    helperApp.printAppStart();
 
     //await helperExampleTasks.runApiRestRequest()
     //await helperExampleTasks.runApiSoapRequest()
@@ -156,49 +157,5 @@ const main = async () => {
     //await helperExampleTasks.runWebScrapeSelenium()
 
     //await helperExampleTasks.runSubmitFormPuppeteer()
-}
-main().then( () => helperApp.exitApp() )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
+main().then(() => helperApp.exitApp());

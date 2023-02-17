@@ -39,16 +39,22 @@ class _helperEnumDataTypes {
      * @param {number} argEnumType
      * @returns {any}
      * */
-    static getEmptyValueOfComplexTypeViaEnumType = ( argEnumType ) => {
-        switch ( argEnumType ) {
-            case _helperEnumDataTypes.fieldArray: return []
-            case _helperEnumDataTypes.fieldError: return new Error()
-            case _helperEnumDataTypes.fieldMap: return new Map()
-            case _helperEnumDataTypes.fieldObject: return {}
-            case _helperEnumDataTypes.fieldSet: return new Set()
-            default: return undefined
+    static getEmptyValueOfComplexTypeViaEnumType = (argEnumType) => {
+        switch (argEnumType) {
+            case _helperEnumDataTypes.fieldArray:
+                return [];
+            case _helperEnumDataTypes.fieldError:
+                return new Error();
+            case _helperEnumDataTypes.fieldMap:
+                return new Map();
+            case _helperEnumDataTypes.fieldObject:
+                return {};
+            case _helperEnumDataTypes.fieldSet:
+                return new Set();
+            default:
+                return undefined;
         }
-    }
+    };
 
     /**
      * @param {any} arg
@@ -56,26 +62,16 @@ class _helperEnumDataTypes {
      * */
     static getEnumDataType = (arg) => {
         switch (typeof arg) {
-            //
-            // Function
-            //
-            case "function": return _helperEnumDataTypes.fieldFunction;
-            //
-            // Object
-            //
-            case "object": return _helperEnumDataTypes._getEnumDataTypeForObject(arg);
-            //
-            // Symbol
-            //
-            // Reminder: This is important because symbols do *not* support `${}` string conversions
-            case "symbol": return _helperEnumDataTypes.fieldSymbol;
-
-            case "undefined": return _helperEnumDataTypes.fieldEitherNonIterableOrString;
-            //
-            // All other cases
-            //
-            // If we get this far, then all other possibilities have been ruled out
-            default: return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            case "function":
+                return _helperEnumDataTypes.fieldFunction;
+            case "object":
+                return _helperEnumDataTypes._getEnumDataTypeForObject(arg);
+            case "symbol":
+                return _helperEnumDataTypes.fieldSymbol;
+            case "undefined":
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            default:
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
         }
     };
 
@@ -85,13 +81,20 @@ class _helperEnumDataTypes {
      * */
     static _getEnumDataTypeForObject = (argObject) => {
         switch (true) {
-            case Array.isArray(argObject): return _helperEnumDataTypes.fieldArray;
-            case argObject instanceof Error: return _helperEnumDataTypes.fieldError;
-            case argObject instanceof Map: return _helperEnumDataTypes.fieldMap;
-            case argObject === null: return _helperEnumDataTypes.fieldEitherNonIterableOrString;
-            case argObject instanceof Promise: return _helperEnumDataTypes.fieldPromise;
-            case argObject instanceof Set: return _helperEnumDataTypes.fieldSet;
-            default: return _helperEnumDataTypes.fieldObject;
+            case Array.isArray(argObject):
+                return _helperEnumDataTypes.fieldArray;
+            case argObject instanceof Error:
+                return _helperEnumDataTypes.fieldError;
+            case argObject instanceof Map:
+                return _helperEnumDataTypes.fieldMap;
+            case argObject === null:
+                return _helperEnumDataTypes.fieldEitherNonIterableOrString;
+            case argObject instanceof Promise:
+                return _helperEnumDataTypes.fieldPromise;
+            case argObject instanceof Set:
+                return _helperEnumDataTypes.fieldSet;
+            default:
+                return _helperEnumDataTypes.fieldObject;
         }
     };
 
@@ -99,15 +102,16 @@ class _helperEnumDataTypes {
      * @param {number} argEnumType
      * @returns boolean
      * */
-    static isEnumTypeToProcess = (argEnumType) => {
-        return _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType)
-    }
+    static isEnumTypeToProcess = (argEnumType) =>
+        _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType);
 }
 //
 // Public
 //
 export class HelperStackItem {
-
+    //
+    // Setup
+    //
     constructor(
         argInput,
         argInputKey,
@@ -115,15 +119,16 @@ export class HelperStackItem {
         argOutput,
         argOutputKey,
         argMapToPreventCircularReferences,
-        argStackToProcess,
+        argStackToProcess
     ) {
-        this.fieldInput = argInput
-        this.fieldInputKey = argInputKey
-        this.fieldInputType = argInputType
-        this.fieldOutput = argOutput
-        this.fieldOutputKey = argOutputKey
-        this.fieldMapToPreventCircularReferences = argMapToPreventCircularReferences
-        this.fieldStackToProcess = argStackToProcess
+        this.fieldInput = argInput;
+        this.fieldInputKey = argInputKey;
+        this.fieldInputType = argInputType;
+        this.fieldOutput = argOutput;
+        this.fieldOutputKey = argOutputKey;
+        this.fieldMapToPreventCircularReferences =
+            argMapToPreventCircularReferences;
+        this.fieldStackToProcess = argStackToProcess;
     }
 }
 //
@@ -137,101 +142,94 @@ export default class helperCopying {
      * @param {any} argInput
      * @returns any
      * */
-    static getCopy = ( argInput ) => {
+    static getCopy = (argInput) => {
         //
         // Reminders:
         // This should *not* attempt to copy promises
         // Error objects, I'm on the fence about
         //
-        const mapToPreventCircularReferences = new Map()
+        const mapToPreventCircularReferences = new Map();
 
         // If arg isn't complex, then its immutable, so just return arg
-        const enumType = _helperEnumDataTypes.getEnumDataType( argInput )
-        if ( !_helperEnumDataTypes.isEnumTypeToProcess( enumType ) ) { return argInput }
+        const enumType = _helperEnumDataTypes.getEnumDataType(argInput);
+        if (!_helperEnumDataTypes.isEnumTypeToProcess(enumType)) {
+            return argInput;
+        }
 
-        const outputToReturn = _helperEnumDataTypes.getEmptyValueOfComplexTypeViaEnumType( enumType )
-
-        const stackToProcess = [  ]
-        const startingStackItem = new HelperStackItem(
-            argInput,
-            undefined,
-            enumType,
-            outputToReturn,
-            undefined,
-            mapToPreventCircularReferences,
-            stackToProcess,
-        )
-        stackToProcess.push( startingStackItem )
-        while ( stackToProcess.length > 0 ) {
-
-            const itemHelperItemForStack = stackToProcess.pop()
+        const outputToReturn =
+            _helperEnumDataTypes.getEmptyValueOfComplexTypeViaEnumType(
+                enumType
+            );
+        const stackToProcess = [];
+        stackToProcess.push(
+            new HelperStackItem(
+                argInput,
+                undefined,
+                enumType,
+                outputToReturn,
+                undefined,
+                mapToPreventCircularReferences,
+                stackToProcess
+            )
+        );
+        while (stackToProcess.length > 0) {
+            const itemHelperItemForStack = stackToProcess.pop();
             //
             // Process the data types
             //
-            switch ( itemHelperItemForStack.fieldInputType ) {
-                //
-                // Array
-                //
+            switch (itemHelperItemForStack.fieldInputType) {
                 case _helperEnumDataTypes.fieldArray:
-                    helperCopying._processArray( itemHelperItemForStack )
-                    break
-                //
-                //
-                //
+                    helperCopying._processArray(itemHelperItemForStack);
+                    break;
                 case _helperEnumDataTypes.fieldError:
-                    helperCopying._processError( itemHelperItemForStack )
-                    break
-                //
-                // Map
-                //
+                    helperCopying._processError(itemHelperItemForStack);
+                    break;
                 case _helperEnumDataTypes.fieldMap:
-                    helperCopying._processMap( itemHelperItemForStack )
-                    break
-                //
-                // Object
-                //
+                    helperCopying._processMap(itemHelperItemForStack);
+                    break;
                 case _helperEnumDataTypes.fieldObject:
-                    helperCopying._processObject( itemHelperItemForStack )
-                    break
-                //
-                // Set
-                //
+                    helperCopying._processObject(itemHelperItemForStack);
+                    break;
                 case _helperEnumDataTypes.fieldSet:
-                    helperCopying._processSet( itemHelperItemForStack )
-                    break
-                //
-                // All other data types
-                //
-                default: break
+                    helperCopying._processSet(itemHelperItemForStack);
+                    break;
+                default:
+                    break;
             }
         }
-        return outputToReturn
-    }
+        return outputToReturn;
+    };
     //
     // Private
     //
     /**
      * @param {HelperStackItem} argHelperStackItem
      * */
-    static _processArray = ( argHelperStackItem ) => {
+    static _processArray = (argHelperStackItem) => {
+        const inputToReference = argHelperStackItem.fieldInput;
+        const mapToPreventCircularReferencesToUpdate =
+            argHelperStackItem.fieldMapToPreventCircularReferences;
+        const outputToUpdate = argHelperStackItem.fieldOutput;
+        const stackToProcess = argHelperStackItem.fieldStackToProcess;
 
-        const inputToReference = argHelperStackItem.fieldInput
-        const mapToPreventCircularReferencesToUpdate = argHelperStackItem.fieldMapToPreventCircularReferences
-        const outputToUpdate = argHelperStackItem.fieldOutput
-        const stackToProcess = argHelperStackItem.fieldStackToProcess
+        let itemIndex = -1;
+        const intLength = inputToReference.length;
+        while (++itemIndex < intLength) {
+            const itemInput = inputToReference[itemIndex];
 
-        for ( let itemIndex = 0, intLength = inputToReference.length; itemIndex < intLength; itemIndex++ ) {
-
-            const itemInput = inputToReference[ itemIndex ]
-
-            const [ itemOutputNew, itemEnumType ] = helperCopying._getOutput( itemInput )
-            if ( _helperEnumDataTypes.isEnumTypeToProcess( itemEnumType ) ) {
-
-                if ( mapToPreventCircularReferencesToUpdate.has( itemInput ) ) {
-                    outputToUpdate.push( mapToPreventCircularReferencesToUpdate.get( itemInput ) )
+            const [itemOutputNew, itemEnumType] =
+                helperCopying._getOutput(itemInput);
+            if (_helperEnumDataTypes.isEnumTypeToProcess(itemEnumType)) {
+                if (mapToPreventCircularReferencesToUpdate.has(itemInput)) {
+                    outputToUpdate.push(
+                        mapToPreventCircularReferencesToUpdate.get(itemInput)
+                    );
                 } else {
-                    mapToPreventCircularReferencesToUpdate.set( itemInput, itemOutputNew, )
-                    outputToUpdate.push( itemOutputNew )
+                    mapToPreventCircularReferencesToUpdate.set(
+                        itemInput,
+                        itemOutputNew
+                    );
+                    outputToUpdate.push(itemOutputNew);
                     argHelperStackItem.fieldStackToProcess.push(
                         new HelperStackItem(
                             itemInput,
@@ -240,61 +238,72 @@ export default class helperCopying {
                             itemOutputNew,
                             itemIndex,
                             mapToPreventCircularReferencesToUpdate,
-                            stackToProcess,
+                            stackToProcess
                         )
-                    )
+                    );
                 }
-            } else { outputToUpdate.push( itemOutputNew ) }
+            } else {
+                outputToUpdate.push(itemOutputNew);
+            }
         }
-    }
+    };
 
     /**
      * @param {HelperStackItem} argHelperStackItem
      * */
-    static _processError = ( argHelperStackItem ) => {
-
+    static _processError = (argHelperStackItem) => {
         const arrayOfStringNameAttributes = [
             "code",
             "errno",
             "message",
             "stack",
             "syscall",
-        ]
-        for ( let itemIndex = 0, intLength = arrayOfStringNameAttributes.length; itemIndex < intLength; itemIndex++ ) {
+        ];
+        let itemIndex = -1;
+        const intLength = arrayOfStringNameAttributes.length;
+        while (++itemIndex < intLength) {
             //
             // If input has the attribute, then add that attribute to argInput
             //
-            let itemStringName = arrayOfStringNameAttributes[ itemIndex ]
-            if ( argHelperStackItem.fieldInput.hasOwnProperty( itemStringName ) ) {
-                argHelperStackItem.fieldOutput[ itemStringName ] = argHelperStackItem.fieldInput[ itemStringName ]
+            let itemStringName = arrayOfStringNameAttributes[itemIndex];
+            if (argHelperStackItem.fieldInput.hasOwnProperty(itemStringName)) {
+                argHelperStackItem.fieldOutput[itemStringName] =
+                    argHelperStackItem.fieldInput[itemStringName];
             }
         }
-    }
+    };
 
     /**
      * @param {HelperStackItem} argHelperStackItem
      * */
-    static _processMap = ( argHelperStackItem ) => {
+    static _processMap = (argHelperStackItem) => {
+        const inputToReference = argHelperStackItem.fieldInput;
+        const mapToPreventCircularReferencesToUpdate =
+            argHelperStackItem.fieldMapToPreventCircularReferences;
+        const outputToUpdate = argHelperStackItem.fieldOutput;
+        const stackToUpdate = argHelperStackItem.fieldStackToProcess;
 
-        const inputToReference = argHelperStackItem.fieldInput
-        const mapToPreventCircularReferencesToUpdate = argHelperStackItem.fieldMapToPreventCircularReferences
-        const outputToUpdate = argHelperStackItem.fieldOutput
-        const stackToUpdate = argHelperStackItem.fieldStackToProcess
+        const arrayOfKeys = inputToReference.keys();
+        let itemIndex = -1;
+        const intLength = arrayOfKeys.length;
+        while (++itemIndex < intLength) {
+            const itemKey = arrayOfKeys[itemIndex];
+            const itemInput = inputToReference.get(itemKey);
 
-        const arrayOfKeys = inputToReference.keys()
-        for ( let itemIndex = 0, intLength = arrayOfKeys.length; itemIndex < intLength; itemIndex++ ) {
-
-            const itemKey = arrayOfKeys[ itemIndex ]
-            const itemInput = inputToReference.get( itemKey )
-
-            const [ itemOutput, itemEnumType ] = helperCopying._getOutput( itemInput )
-            if ( _helperEnumDataTypes.isEnumTypeToProcess( itemEnumType ) ) {
-
-                if ( mapToPreventCircularReferencesToUpdate.has( itemInput ) ) {
-                    outputToUpdate.set( itemKey, mapToPreventCircularReferencesToUpdate.get( itemInput ) )
+            const [itemOutput, itemEnumType] =
+                helperCopying._getOutput(itemInput);
+            if (_helperEnumDataTypes.isEnumTypeToProcess(itemEnumType)) {
+                if (mapToPreventCircularReferencesToUpdate.has(itemInput)) {
+                    outputToUpdate.set(
+                        itemKey,
+                        mapToPreventCircularReferencesToUpdate.get(itemInput)
+                    );
                 } else {
-                    mapToPreventCircularReferencesToUpdate.set( itemInput, itemOutput, )
-                    outputToUpdate.set( itemKey, itemOutput, )
+                    mapToPreventCircularReferencesToUpdate.set(
+                        itemInput,
+                        itemOutput
+                    );
+                    outputToUpdate.set(itemKey, itemOutput);
                     stackToUpdate.push(
                         new HelperStackItem(
                             itemInput,
@@ -303,38 +312,45 @@ export default class helperCopying {
                             itemOutput,
                             itemKey,
                             mapToPreventCircularReferencesToUpdate,
-                            stackToUpdate,
+                            stackToUpdate
                         )
-                    )
+                    );
                 }
-            } else { outputToUpdate.set( itemKey, itemOutput, ) }
+            } else {
+                outputToUpdate.set(itemKey, itemOutput);
+            }
         }
-    }
+    };
 
     /**
      * @param {HelperStackItem} argHelperStackItem
      * */
-    static _processObject = ( argHelperStackItem ) => {
+    static _processObject = (argHelperStackItem) => {
+        const inputToReference = argHelperStackItem.fieldInput;
+        const mapToPreventCircularReferences =
+            argHelperStackItem.fieldMapToPreventCircularReferences;
+        const outputToUpdate = argHelperStackItem.fieldOutput;
+        const stackToUpdate = argHelperStackItem.fieldStackToProcess;
 
-        const inputToReference = argHelperStackItem.fieldInput
-        const mapToPreventCircularReferences = argHelperStackItem.fieldMapToPreventCircularReferences
-        const outputToUpdate = argHelperStackItem.fieldOutput
-        const stackToUpdate = argHelperStackItem.fieldStackToProcess
+        const arrayOfKeys = Object.keys(inputToReference);
 
-        const arrayOfKeys = Object.keys( inputToReference )
-        for ( let itemIndex = 0, intLength = arrayOfKeys.length; itemIndex < intLength; itemIndex++ ) {
-
-            const itemKey = arrayOfKeys[ itemIndex ]
-            const itemInput = inputToReference[ itemKey ]
-
-            const [ itemOutputNew, itemEnumType ] = helperCopying._getOutput( itemInput )
-            if ( _helperEnumDataTypes.isEnumTypeToProcess( itemEnumType ) ) {
-
-                if ( mapToPreventCircularReferences.has( itemInput ) ) {
-                    outputToUpdate[ itemKey ] = mapToPreventCircularReferences.get( itemInput )
+        let itemIndex = -1;
+        const intLength = arrayOfKeys.length;
+        while (++itemIndex < intLength) {
+            const itemKey = arrayOfKeys[itemIndex];
+            const itemInput = inputToReference[itemKey];
+            const [itemOutputNew, itemEnumType] =
+                helperCopying._getOutput(itemInput);
+            if (_helperEnumDataTypes.isEnumTypeToProcess(itemEnumType)) {
+                if (mapToPreventCircularReferences.has(itemInput)) {
+                    outputToUpdate[itemKey] =
+                        mapToPreventCircularReferences.get(itemInput);
                 } else {
-                    mapToPreventCircularReferences.set( itemInput, itemOutputNew, )
-                    outputToUpdate[ itemKey ] = itemOutputNew
+                    mapToPreventCircularReferences.set(
+                        itemInput,
+                        itemOutputNew
+                    );
+                    outputToUpdate[itemKey] = itemOutputNew;
                     stackToUpdate.push(
                         new HelperStackItem(
                             itemInput,
@@ -343,37 +359,45 @@ export default class helperCopying {
                             itemOutputNew,
                             itemKey,
                             mapToPreventCircularReferences,
-                            stackToUpdate,
+                            stackToUpdate
                         )
-                    )
+                    );
                 }
-            } else { outputToUpdate[ itemKey ] = itemOutputNew }
+            } else {
+                outputToUpdate[itemKey] = itemOutputNew;
+            }
         }
-    }
+    };
 
     /**
      * @param {HelperStackItem} argHelperStackItem
      * */
-    static _processSet = ( argHelperStackItem ) => {
+    static _processSet = (argHelperStackItem) => {
+        const inputToReference = argHelperStackItem.fieldInput;
+        const mapToPreventCircularReferencesToUpdate =
+            argHelperStackItem.fieldMapToPreventCircularReferences;
+        const outputToUpdate = argHelperStackItem.fieldOutput;
+        const stackToUpdate = argHelperStackItem.fieldStackToProcess;
 
-        const inputToReference = argHelperStackItem.fieldInput
-        const mapToPreventCircularReferencesToUpdate = argHelperStackItem.fieldMapToPreventCircularReferences
-        const outputToUpdate = argHelperStackItem.fieldOutput
-        const stackToUpdate = argHelperStackItem.fieldStackToProcess
+        const arrayFromSet = Array.from(inputToReference);
+        let itemIndex = -1;
+        const intLength = arrayFromSet.length;
+        while (++itemIndex < intLength) {
+            const itemInput = arrayFromSet[itemIndex];
 
-        const arrayFromSet = Array.from( inputToReference )
-        for ( let itemIndex = 0, intLength = arrayFromSet.length; itemIndex < intLength; itemIndex++ ) {
-
-            const itemInput = arrayFromSet[ itemIndex ]
-
-            const [ itemOutput, itemEnumType ] = helperCopying._getOutput( itemInput )
-            if ( _helperEnumDataTypes.isEnumTypeToProcess( itemEnumType ) ) {
-
-                if ( mapToPreventCircularReferencesToUpdate.has( itemInput ) ) {
-                    outputToUpdate.add( mapToPreventCircularReferencesToUpdate.get( itemInput ) )
+            const [itemOutput, itemEnumType] =
+                helperCopying._getOutput(itemInput);
+            if (_helperEnumDataTypes.isEnumTypeToProcess(itemEnumType)) {
+                if (mapToPreventCircularReferencesToUpdate.has(itemInput)) {
+                    outputToUpdate.add(
+                        mapToPreventCircularReferencesToUpdate.get(itemInput)
+                    );
                 } else {
-                    mapToPreventCircularReferencesToUpdate.set( itemInput, itemOutput, )
-                    outputToUpdate.add( itemOutput )
+                    mapToPreventCircularReferencesToUpdate.set(
+                        itemInput,
+                        itemOutput
+                    );
+                    outputToUpdate.add(itemOutput);
                     stackToUpdate.push(
                         new HelperStackItem(
                             itemInput,
@@ -382,13 +406,15 @@ export default class helperCopying {
                             itemOutput,
                             itemIndex,
                             mapToPreventCircularReferencesToUpdate,
-                            stackToUpdate,
+                            stackToUpdate
                         )
-                    )
+                    );
                 }
-            } else { outputToUpdate.add( itemOutput ) }
+            } else {
+                outputToUpdate.add(itemOutput);
+            }
         }
-    }
+    };
     //
     // Private - get
     //
@@ -396,55 +422,12 @@ export default class helperCopying {
      * @param {any} arg
      * @returns any
      * */
-    static _getOutput = ( arg ) => {
-
-        const enumType = _helperEnumDataTypes.getEnumDataType( arg )
-        const emptyValue = _helperEnumDataTypes.getEmptyValueOfComplexTypeViaEnumType( enumType )
-        const valueToReturn = emptyValue !== undefined ? emptyValue : arg
-
-        return [ valueToReturn, enumType, ]
-    }
+    static _getOutput = (arg) => {
+        const enumType = _helperEnumDataTypes.getEnumDataType(arg);
+        const emptyValue =
+            _helperEnumDataTypes.getEmptyValueOfComplexTypeViaEnumType(
+                enumType
+            );
+        return [emptyValue !== undefined ? emptyValue : arg, enumType];
+    };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -17,7 +17,8 @@ export default class helperDataJson {
      *
      * Reminder: The return type for this func is the same as JSON.parse()'s return type
      * */
-    static getObjectFromJsonString = ( argStringJson ) => { return JSON.parse( argStringJson ) }
+    static getObjectFromJsonString = (argStringJson) =>
+        JSON.parse(argStringJson);
 
     /**
      * This attempts to get the value stored at the end of path
@@ -29,15 +30,15 @@ export default class helperDataJson {
      * - Which part of the path is missing?
      *
      * @param {any} arg
-     * @param {[]} argArrayPath
+     * @param {any[]} argArrayPath
      * @returns any
      * */
     static getValueAtPathInArg = (argArrayPath, arg) => {
-
         const arrayOfKeysThatExist = [];
-
         let item = arg;
-        for ( let itemIntIndex = 0, intLength = argArrayPath.length; itemIntIndex < intLength; itemIntIndex++ ) {
+        let itemIntIndex = -1;
+        const intLength = argArrayPath.length;
+        while (++itemIntIndex < intLength) {
             let itemKey = argArrayPath[itemIntIndex];
             switch (helperEnumDataTypes.getEnumDataType(item)) {
                 //
@@ -50,7 +51,9 @@ export default class helperDataJson {
                         argArrayPath,
                         itemKey
                     );
-                    if (item instanceof Error) { return item; }
+                    if (item instanceof Error) {
+                        return item;
+                    }
                     break;
                 //
                 //
@@ -62,7 +65,9 @@ export default class helperDataJson {
                         itemKey,
                         item
                     );
-                    if (item instanceof Error) { return item; }
+                    if (item instanceof Error) {
+                        return item;
+                    }
                     break;
                 //
                 // Object
@@ -74,7 +79,9 @@ export default class helperDataJson {
                         itemKey,
                         item
                     );
-                    if (item instanceof Error) { return item; }
+                    if (item instanceof Error) {
+                        return item;
+                    }
                     break;
                 //
                 // In all other cases, the path failed
@@ -97,9 +104,9 @@ export default class helperDataJson {
     // Private
     //
     /**
-     * @param {[]} argArray
-     * @param {[]} argArrayOfKeysThatExistToUpdate
-     * @param {[]} argArrayPath
+     * @param {any[]} argArray
+     * @param {any[]} argArrayOfKeysThatExistToUpdate
+     * @param {any[]} argArrayPath
      * @param {any} argKey
      * @returns any
      * */
@@ -125,9 +132,9 @@ export default class helperDataJson {
             //
             // Otherwise, return Error.
             //
-            if ( 0 <= intIndex && intIndex < argArray.length ) {
-                argArrayOfKeysThatExistToUpdate.push( argKey );
-                return argArray[ intIndex ];
+            if (0 <= intIndex && intIndex < argArray.length) {
+                argArrayOfKeysThatExistToUpdate.push(argKey);
+                return argArray[intIndex];
             } else {
                 return helperDataJson._getErrorBecausePathFailed(
                     argArray,
@@ -147,8 +154,8 @@ export default class helperDataJson {
     };
 
     /**
-     * @param {[]} argArrayOfKeysThatExistToUpdate
-     * @param {[]} argArrayPath
+     * @param {any[]} argArrayOfKeysThatExistToUpdate
+     * @param {any[]} argArrayPath
      * @param {any} argKey
      * @param {Map} argMap
      * */
@@ -162,9 +169,9 @@ export default class helperDataJson {
         // If the key exists, then update item and arrayOfKeysThatExist
         // Otherwise, return Error.
         //
-        if ( argMap.has( argKey ) ) {
-            argArrayOfKeysThatExistToUpdate.push( argKey );
-            return argMap.get( argKey );
+        if (argMap.has(argKey)) {
+            argArrayOfKeysThatExistToUpdate.push(argKey);
+            return argMap.get(argKey);
         } else {
             return helperDataJson._getErrorBecausePathFailed(
                 argMap,
@@ -176,8 +183,8 @@ export default class helperDataJson {
     };
 
     /**
-     * @param {[]} argArrayOfKeysThatExistToUpdate
-     * @param {[]} argArrayPath
+     * @param {any[]} argArrayOfKeysThatExistToUpdate
+     * @param {any[]} argArrayPath
      * @param {any} argKey
      * @param {Object} argObject
      * @returns any
@@ -192,9 +199,9 @@ export default class helperDataJson {
         // If the key exists, then update item and arrayOfKeysThatExist
         // Otherwise, return Error.
         //
-        if ( argObject.hasOwnProperty( argKey ) ) {
-            argArrayOfKeysThatExistToUpdate.push( argKey );
-            return argObject[ argKey ];
+        if (argObject.hasOwnProperty(argKey)) {
+            argArrayOfKeysThatExistToUpdate.push(argKey);
+            return argObject[argKey];
         } else {
             return helperDataJson._getErrorBecausePathFailed(
                 argObject,
@@ -207,8 +214,8 @@ export default class helperDataJson {
 
     /**
      * @param {any} arg
-     * @param {[]} argArrayPath
-     * @param {[]} argArrayPathThatExists
+     * @param {any[]} argArrayPath
+     * @param {any[]} argArrayPathThatExists
      * @param {any} argKeyAtFailure
      * @returns Error
      * */
@@ -220,114 +227,84 @@ export default class helperDataJson {
     ) => {
         const arrayToReturn = [
             `Failed to navigate path`,
-            `keyAtFailure = ${helperStrings.getStringFromArg( argKeyAtFailure )}`,
-            `arrayPath = ${helperStrings.getStringPrintableFromIterable( argArrayPath )}`,
+            `keyAtFailure = ${helperStrings.getStringFromArg(argKeyAtFailure)}`,
+            `arrayPath = ${helperStrings.getStringPrintableFromIterable(
+                argArrayPath
+            )}`,
             `arrayPathThatExists = ${argArrayPathThatExists}`,
-            `arrayPathMissing = ${helperStrings.getStringPrintableFromIterable( argArrayPath.slice( argArrayPathThatExists.length ) )}`,
+            `arrayPathMissing = ${helperStrings.getStringPrintableFromIterable(
+                argArrayPath.slice(argArrayPathThatExists.length)
+            )}`,
         ];
-
         switch (typeof arg) {
             case "object":
                 switch (true) {
                     case arg === null:
-                        arrayToReturn.push( `No keys available because node is null` );
+                        arrayToReturn.push(
+                            `No keys available because node is null`
+                        );
                         break;
-                    case Array.isArray( arg ):
-                        arrayToReturn.push( `rangeOfIndexesAvailable = 0 - ${arg.length - 1}` );
+                    case Array.isArray(arg):
+                        arrayToReturn.push(
+                            `rangeOfIndexesAvailable = 0 - ${arg.length - 1}`
+                        );
                         break;
                     case arg instanceof Map:
-                        arrayToReturn.push( `arrayOfAvailableKeysAtFailure = ${helperStrings.getStringPrintableFromIterable( arg.keys() )}` );
+                        arrayToReturn.push(
+                            `arrayOfAvailableKeysAtFailure = ${helperStrings.getStringPrintableFromIterable(
+                                arg.keys()
+                            )}`
+                        );
                         break;
                     default:
-                        arrayToReturn.push( `arrayOfAvailableKeysAtFailure = ${helperStrings.getStringPrintableFromIterable( Object.keys( arg ) )}` );
+                        arrayToReturn.push(
+                            `arrayOfAvailableKeysAtFailure = ${helperStrings.getStringPrintableFromIterable(
+                                Object.keys(arg)
+                            )}`
+                        );
                         break;
                 }
                 break;
             default:
-                arrayToReturn.push( `No keys available because node is not a type of object` );
+                arrayToReturn.push(
+                    `No keys available because node is not a type of object`
+                );
                 break;
         }
-        arrayToReturn.push( `dataTypeAtFailure = ${helperEnumDataTypes.getStringDataType(arg)}` );
+        arrayToReturn.push(
+            `dataTypeAtFailure = ${helperEnumDataTypes.getStringDataType(arg)}`
+        );
         return helperErrors.raiseError(
-            Error(
-                helperStrings.getStringByCombiningArray(
-                    arrayToReturn,
-                    "\n",
-                )
-            )
+            Error(helperStrings.getStringByCombiningArray(arrayToReturn, "\n"))
         );
     };
 
     /**
      * @param {any} argKey
      * */
-    static _getIntIndexFromKey = ( argKey ) => {
+    static _getIntIndexFromKey = (argKey) => {
         switch (typeof argKey) {
             //
             // Reminder: In tests, this appears to be 'ok' for using to reference arrays
             //
-            case "bigint": return argKey;
+            case "bigint":
+                return argKey;
             //
             // If the data type is a number, then it needs to be an int to be valid
             //
-            case "number": return Number.isInteger(argKey) ? argKey : undefined;
+            case "number":
+                return Number.isInteger(argKey) ? argKey : undefined;
             //
             // If the key is a string, then check it for only digits and return the
-            // the resulting int
+            // resulting int
             //
-            case "string": return /^\d+$/.test(argKey) ? parseInt(argKey) : undefined;
+            case "string":
+                return /^\d+$/.test(argKey) ? parseInt(argKey) : undefined;
             //
             // In all other cases, return undefined
             //
-            default: return undefined;
+            default:
+                return undefined;
         }
     };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

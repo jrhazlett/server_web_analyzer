@@ -15,7 +15,7 @@ console.log( await helperBrowser.getStringPageSource() )
 //
 // Libraries - downloaded
 //
-import webdriver, { By, until } from "selenium-webdriver"
+import webdriver, { By, until } from "selenium-webdriver";
 //
 // Libraries - custom
 //
@@ -36,24 +36,27 @@ export default class HelperBrowserSelenium {
      * @param {string} argStringXpath
      * @param {Function} argCallbackArgUnpackedArrayReturnAttribute
      * */
-    getArrayOfStringsViaXpath = async ( argStringUrl, argStringXpath, argCallbackArgUnpackedArrayReturnAttribute ) => {
-
+    getArrayOfStringsViaXpath = async (
+        argStringUrl,
+        argStringXpath,
+        argCallbackArgUnpackedArrayReturnAttribute
+    ) => {
         const arrayOfWebElements = await this.getArrayOfElementHandlesViaXpath(
             argStringUrl,
-            argStringXpath,
-        )
-        return argCallbackArgUnpackedArrayReturnAttribute( arrayOfWebElements )
-    }
+            argStringXpath
+        );
+        return argCallbackArgUnpackedArrayReturnAttribute(arrayOfWebElements);
+    };
 
     /**
      * @param {string} argStringUrl
      * @param {string} argStringXpath
      * @returns Promise
      * */
-    getArrayOfElementHandlesViaXpath = async ( argStringUrl, argStringXpath ) => {
-        await this.setUrl( argStringUrl )
-        return await this.fieldBrowser.findElements( By.xpath( argStringXpath ) )
-    }
+    getArrayOfElementHandlesViaXpath = async (argStringUrl, argStringXpath) => {
+        await this.setUrl(argStringUrl);
+        return await this.fieldBrowser.findElements(By.xpath(argStringXpath));
+    };
 
     /**
      * Steps:
@@ -61,14 +64,15 @@ export default class HelperBrowserSelenium {
      * - Promise.all( map() the results )
      * @returns Promise
      * */
-    getArrayOfStringsLinks = async ( argStringUrl ) => {
-
-        return await this.getArrayOfStringsViaXpath(
+    getArrayOfStringsLinks = async (argStringUrl) =>
+        await this.getArrayOfStringsViaXpath(
             argStringUrl,
             "//a",
-            ( ...arrayOfWebElements ) => arrayOfWebElements.map( itemWebElement => itemWebElement.getAttribute( "href" ) )
-        )
-    }
+            (...arrayOfWebElements) =>
+                arrayOfWebElements.map((itemWebElement) =>
+                    itemWebElement.getAttribute("href")
+                )
+        );
     //
     // Public - get - callback
     //
@@ -78,7 +82,8 @@ export default class HelperBrowserSelenium {
      * @param {string} argStringSub
      * @returns Function
      * */
-    getCallbackWaitUntilTitleHasSubstring = ( argStringSub ) => ( () => until.titleContains( argStringSub ) )
+    getCallbackWaitUntilTitleHasSubstring = (argStringSub) => () =>
+        until.titleContains(argStringSub);
     //
     // Public - get - string
     //
@@ -86,15 +91,15 @@ export default class HelperBrowserSelenium {
      * @param {string} argStringUrl
      * @returns Promise
      * */
-    getStringPageSource = async ( argStringUrl ) => {
-        await this.setUrl( argStringUrl )
-        await this.fieldBrowser.getPageSource()
-    }
+    getStringPageSource = async (argStringUrl) => {
+        await this.setUrl(argStringUrl);
+        await this.fieldBrowser.getPageSource();
+    };
 
     /**
      * @returns Promise
      * */
-    getStringUrlCurrent = async () => this.fieldBrowser.getCurrentUrl()
+    getStringUrlCurrent = async () => this.fieldBrowser.getCurrentUrl();
     //
     // Public - set
     //
@@ -102,81 +107,77 @@ export default class HelperBrowserSelenium {
      * @param {string} argStringXpath
      * @param {string} argStringText
      * @returns Promise
+     *
+     * Send string to all returned WebElements
+     *
+     * Reminder: WebElement.sendKeys() returns a Promise. This code doesn't need to block, it just needs to make
+     * sure all promises are resolved by this method's conclusion.
      * */
-    setTextForFieldAtXpath = async ( argStringXpath, argStringText ) => {
-
-        const arrayOfWebElements = await this.fieldBrowser.findElements( By.xpath( argStringXpath ) )
-        //
-        // Send string to all returned WebElements
-        //
-        // Reminder: WebElement.sendKeys() returns a Promise. This code doesn't need to block, it just needs to make
-        // sure all promises are resolved by this method's conclusion.
-        const arrayOfPromises = new Array( arrayOfWebElements.length )
-        for ( let itemIntIndex = 0, intLength = arrayOfWebElements.length; itemIntIndex < intLength; itemIntIndex++ ) {
-            arrayOfPromises[ itemIntIndex ] = arrayOfWebElements[ itemIntIndex ].sendKeys( argStringText )
-        }
-        return Promise.all( arrayOfPromises )
-    }
+    setTextForFieldAtXpath = async (argStringXpath, argStringText) =>
+        Promise.all(
+            (
+                await this.fieldBrowser.findElements(By.xpath(argStringXpath))
+            ).map((itemWebElement) => itemWebElement.sendKeys(argStringText))
+        );
 
     /**
-     * @param {[]} argArrayOfPairsStringsXpathsAndStringsText
+     * @param {string[][]} argArrayOfPairsStringsXpathsAndStringsText
      * */
-    setTextForFieldAtXpathViaArrayOfPairsXpathAndText = async ( argArrayOfPairsStringsXpathsAndStringsText ) => {
-
+    setTextForFieldAtXpathViaArrayOfPairsXpathAndText = async (
+        argArrayOfPairsStringsXpathsAndStringsText
+    ) => {
+        //
         // Reminder: WebElement.getAttribute() returns a Promise. This code doesn't need to block, it just needs to make
         // sure all promises are resolved by this method's conclusion.
-        const arrayOfPromises = new Array( argArrayOfPairsStringsXpathsAndStringsText.length )
-        for ( let itemIntIndex = 0, intLength = argArrayOfPairsStringsXpathsAndStringsText.length; itemIntIndex < intLength; itemIntIndex++ ) {
-
-            const [ itemStringXpath, itemStringText ] = argArrayOfPairsStringsXpathsAndStringsText[ itemIntIndex ]
-            const arrayOfWebElements = await this.fieldBrowser.findElements( By.xpath( itemStringXpath ) )
-
-            if ( arrayOfWebElements.length === 0 ) {
-                arrayOfPromises[ itemIntIndex ] = new Promise(
-                    resolve => {
-                        resolve(
-                            helperErrors.raiseError( Error(
-                                `Xpath not found; itemStringXpath = ${itemStringXpath}; itemStringText = ${itemStringText}`
-                            ) )
-                        )
-                    }
-                )
-            } else {
-                //
-                // Send string to all returned WebElements
-                //
-                // Reminder: WebElement.sendKeys() returns a Promise. This code doesn't need to block, it just needs to make
-                // sure all promises are resolved by this method's conclusion.
-                const arrayOfPromisesSendKeys = new Array( arrayOfWebElements.length )
-                for ( let itemIntIndexWebElements = 0, intLengthWebElements = arrayOfWebElements.length; itemIntIndexWebElements < intLengthWebElements; itemIntIndexWebElements++ ) {
-                    arrayOfPromisesSendKeys[ itemIntIndexWebElements ] = arrayOfWebElements[ itemIntIndexWebElements ].sendKeys( itemStringText )
-                }
-                arrayOfPromises[ itemIntIndex ] = Promise.all( arrayOfPromisesSendKeys )
-            }
-
-
-        }
         // Resolve all promises before concluding method
-        await Promise.all( arrayOfPromises )
-    }
-    //
-    // Public - load
-    //
+        await Promise.all(
+            argArrayOfPairsStringsXpathsAndStringsText.map(
+                async ([itemStringXpath, itemStringText]) => {
+                    const arrayOfWebElements =
+                        await this.fieldBrowser.findElements(
+                            By.xpath(itemStringXpath)
+                        );
+                    return arrayOfWebElements.length === 0
+                        ? new Promise((resolve) =>
+                              resolve(
+                                  helperErrors.raiseError(
+                                      Error(
+                                          `Xpath not found; itemStringXpath = ${itemStringXpath}; itemStringText = ${itemStringText}`
+                                      )
+                                  )
+                              )
+                          )
+                        : //
+                          // Send string to all returned WebElements
+                          //
+                          // Reminder: WebElement.sendKeys() returns a Promise. This code doesn't need to block, it just needs to make
+                          // sure all promises are resolved by this method's conclusion.
+                          Promise.all(
+                              arrayOfWebElements.map((itemPromiseSendKey) =>
+                                  itemPromiseSendKey.sendKeys(itemStringText)
+                              )
+                          );
+                }
+            )
+        );
+    };
+
     /**
      * @param {string} argStringUrl
      * */
-    setUrl = async ( argStringUrl ) => {
-        this.setupBrowserIfUndefined()
-        console.log( `Setting url: ${argStringUrl}...` )
-        await this.fieldBrowser.get( argStringUrl )
-        console.log( `Setting url: ${argStringUrl}...DONE\n` )
-        return this
-    }
-
+    setUrl = async (argStringUrl) => {
+        this.setupBrowserIfUndefined();
+        console.log(`Setting url: ${argStringUrl}...`);
+        await this.fieldBrowser.get(argStringUrl);
+        console.log(`Setting url: ${argStringUrl}...DONE\n`);
+        return this;
+    };
+    //
+    // Public - setup
+    //
     /***/
     setupBrowserIfUndefined = () => {
-
-        if ( this.fieldBrowser === undefined ) {
+        if (this.fieldBrowser === undefined) {
             //
             // Build list of any options for browser
             //
@@ -190,71 +191,52 @@ export default class HelperBrowserSelenium {
                 //
                 // Ignore certificate errors
                 //
-                "--ignore-certificate-errors"
-            ]
+                "--ignore-certificate-errors",
+            ];
             //
             // Create browser process
             //
             // Reminder: Separating out new webdriver.Builder().forBrowser("chrome") into its own section triggers an error
-            const stringNameBrowser = "chrome"
+            const stringNameBrowser = "chrome";
 
-            if ( arrayOfStringsOptions.length === 0 ) {
-
-                this.fieldBrowser = new webdriver
-                    .Builder()
-                    .forBrowser( stringNameBrowser )
-                    .build()
-            } else {
-                this.fieldBrowser = new webdriver
-                    .Builder()
+            if (arrayOfStringsOptions.length === 0) {
+                this.fieldBrowser = new webdriver.Builder()
                     .forBrowser(stringNameBrowser)
-                    .setChromeOptions( arrayOfStringsOptions )
-                    .build()
+                    .build();
+            } else {
+                this.fieldBrowser = new webdriver.Builder()
+                    .forBrowser(stringNameBrowser)
+                    .setChromeOptions(arrayOfStringsOptions)
+                    .build();
             }
             //
             // On exit, make sure we quit out of any open browsers
             //
-            process.addListener(
-                "beforeExit",
-                async () => {
-                    try { await this.fieldBrowser.quit()
-                    } catch ( err ) {
-                        // Reminder: This quiets the 'NoSuchSessionError' message
-                        console.log( "" )
-                    }
+            process.addListener("beforeExit", async () => {
+                try {
+                    await this.fieldBrowser.quit();
+                } catch (err) {
+                    // Reminder: This quiets the 'NoSuchSessionError' message
+                    console.log("");
                 }
-            )
+            });
         }
-    }
+    };
     //
     // Public - wait
     //
     /**
      * @param {Function} argCallbackConditional
      * */
-    waitUntilCallbackConditionMet = async ( argCallbackConditional ) => this.fieldBrowser.wait( argCallbackConditional() )
+    waitUntilCallbackConditionMet = async (argCallbackConditional) =>
+        this.fieldBrowser.wait(argCallbackConditional());
     //
     // Constructor
     //
-    constructor() { this.fieldBrowser = undefined }
+    constructor() {
+        this.fieldBrowser = undefined;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 getArrayOfStringsValuesFromXpathAndAttribute = async ( argStringXpath, argStringNameAttribute ) => {
@@ -275,20 +257,3 @@ getArrayOfStringsValuesFromXpathAndAttribute = async ( argStringXpath, argString
     return Promise.all( arrayOfPromises )
 }
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

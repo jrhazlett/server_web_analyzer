@@ -11,7 +11,7 @@ objectNew = {
 //
 // Libraries - downloaded
 //
-import axios from "axios"
+import axios from "axios";
 //
 // Libraries - custom
 //
@@ -32,39 +32,52 @@ export default class helperApiClientRest {
      * @param {Object} argObjectAxiosRequestConfig
      * @returns any
      * */
-    static async getResponse( argObjectAxiosRequestConfig ) {
+    static async getResponse(argObjectAxiosRequestConfig) {
         //
         // Create a copy of the incoming config; this we way avoid changing the argument
         //
-        const objectAxiosRequestConfig = helperCopying.getCopy( argObjectAxiosRequestConfig )
+        const objectAxiosRequestConfig = helperCopying.getCopy(
+            argObjectAxiosRequestConfig
+        );
         //
         // Set timeout
         //
-        if ( objectAxiosRequestConfig.timeout === undefined ) { objectAxiosRequestConfig.timeout = helperTime.getIntSeconds( 1 ) }
+        if (objectAxiosRequestConfig.timeout === undefined) {
+            objectAxiosRequestConfig.timeout = helperTime.getIntSeconds(1);
+        }
         //
         // Setup axios so it never throws an error
         //
-        if ( objectAxiosRequestConfig.validateStatus === undefined ) { objectAxiosRequestConfig.validateStatus = ( status ) => true }
+        if (objectAxiosRequestConfig.validateStatus === undefined) {
+            objectAxiosRequestConfig.validateStatus = (status) => true;
+        }
         //
         // Run request
         //
-        console.log( `Getting REST response from url: ${objectAxiosRequestConfig.url}...` )
-        let response
+        console.log(
+            `Getting REST response from url: ${objectAxiosRequestConfig.url}...`
+        );
+        let response;
         try {
-            response = await axios( objectAxiosRequestConfig )
-        } catch ( err ) {
-            console.log( [
-                "Error occurred, likely due to being unable to connect to target.",
-                "REMINDER: The default config for web analyzer, errors do *not* trigger on >400 error codes.",
-                " ",
-            ].reduce( ( itemStringPrev, itemString ) => itemStringPrev + "\n" + itemString ) )
-
+            response = await axios(objectAxiosRequestConfig);
+        } catch (err) {
             // Kill the app before axios / nodejs has a chance to dump an insane amount of text to screen
             // Comment this out if you actually want to see it
-            process.exit( 1 )
+            throw Error(
+                [
+                    "Error occurred, likely due to being unable to connect to target.",
+                    "REMINDER: The default config for web analyzer, errors do *not* trigger on >400 error codes.",
+                    " ",
+                ].reduce(
+                    (itemStringPrev, itemString) =>
+                        `${itemStringPrev}\n${itemString}`
+                )
+            );
         }
-        console.log( `Getting REST response from url: ${objectAxiosRequestConfig.url}...DONE\n` )
-        return response
+        console.log(
+            `Getting REST response from url: ${objectAxiosRequestConfig.url}...DONE\n`
+        );
+        return response;
     }
 
     /**
@@ -72,71 +85,21 @@ export default class helperApiClientRest {
      *
      * @returns Object
      * */
-    static getObjectSettingHeaderContentType = () => { return { "Content-type": "application/json; charset=utf-8" } }
-
+    static getObjectSettingHeaderContentType = () => ({
+        "Content-type": "application/json; charset=utf-8",
+    });
+    //
+    // Public - print
+    //
     /**
      * @param {Object} argResponse
      * */
-    static printResponse = ( argResponse ) => {
-
-        prettyPrinterForHumans.pprint(
-            argResponse,
-            {
-                argStringNameToOutput: "argResponse",
-                argStringTrailingSpace: "\n",
-                argIntDepthToPrint: 2,
-            }
-        )
-
-        const { status } = argResponse
-
-        console.log( `status = ${status}` )
-
-    }
+    static printResponse = (argResponse) => {
+        prettyPrinterForHumans.pprint(argResponse, {
+            argStringNameToOutput: "argResponse",
+            argStringTrailingSpace: "\n",
+            argIntDepthToPrint: 2,
+        });
+        console.log(`status = ${argResponse["status"]}`);
+    };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

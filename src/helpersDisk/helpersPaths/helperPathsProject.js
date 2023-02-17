@@ -19,127 +19,104 @@ class HelperPathsProject {
      * @param {string} argStringPath
      * @returns string
      * */
-    getStringPathAncestor = ( argStringPath ) => { return path.dirname( argStringPath ) }
+    getStringPathAncestor = (argStringPath) => path.dirname(argStringPath);
 
     /**
      * @param {string} argStringPath
      * @returns {Error | undefined}
      * */
-    getErrorIfPathIsOutsideProject = ( argStringPath ) => {
-
-        if ( !argStringPath.startsWith( this.fieldStringPathDirProject ) ) {
-            const arrayError = [
-                "argStringPath is outside the project.",
-                `argStringPath = ${argStringPath}`,
-                `this.fieldStringPathDirProject = ${this.fieldStringPathDirProject}`,
-                `argStringPath.startsWith( this.fieldStringPathDirProject ) = ${argStringPath.startsWith( this.fieldStringPathDirProject )}`,
-            ]
-            return helperErrors.raiseError( Error( helperStrings.getStringByCombiningArray( arrayError, "\n", ) ) )
+    getErrorIfPathIsOutsideProject = (argStringPath) => {
+        if (!argStringPath.startsWith(this.fieldStringPathDirProject)) {
+            throw Error(
+                helperStrings.getStringByCombiningArray(
+                    [
+                        "argStringPath is outside the project.",
+                        `argStringPath = ${argStringPath}`,
+                        `this.fieldStringPathDirProject = ${this.fieldStringPathDirProject}`,
+                        `argStringPath.startsWith( this.fieldStringPathDirProject ) = ${argStringPath.startsWith(
+                            this.fieldStringPathDirProject
+                        )}`,
+                    ],
+                    "\n"
+                )
+            );
         }
-        return undefined
-    }
+        return undefined;
+    };
 
     /**
      * @param {string} argStringPathRel
      * @returns string
      * */
-    getStringPathAbsolute = ( argStringPathRel ) => { return path.join( this.fieldStringPathDirProject, argStringPathRel, ) }
+    getStringPathAbsolute = (argStringPathRel) =>
+        path.join(this.fieldStringPathDirProject, argStringPathRel);
 
     /**
      * @param {string} argStringPathRel
      * @returns string
      * */
-    getStringPathDataInput = ( argStringPathRel = undefined ) => { return argStringPathRel === undefined ? this.fieldStringPathDirDataOutput : path.join( this.fieldStringPathDirDataOutput, argStringPathRel, ) }
+    getStringPathDataInput = (argStringPathRel = undefined) =>
+        argStringPathRel === undefined
+            ? this.fieldStringPathDirDataOutput
+            : path.join(this.fieldStringPathDirDataOutput, argStringPathRel);
 
     /**
      * @param {string} argStringPathRel
      * @returns string
      * */
-    getStringPathDataOutput = ( argStringPathRel = undefined ) => { return argStringPathRel === undefined ? this.fieldStringPathDirDataOutput : path.join( this.fieldStringPathDirDataOutput, argStringPathRel, ) }
+    getStringPathDataOutput = (argStringPathRel = undefined) =>
+        argStringPathRel === undefined
+            ? this.fieldStringPathDirDataOutput
+            : path.join(this.fieldStringPathDirDataOutput, argStringPathRel);
 
     /**
      * @param {string} argStringPath
      * */
-    logicDirIsProjectRoot = ( argStringPath ) => { return fs.readdirSync( argStringPath ).includes( "package.json" ) }
+    logicDirIsProjectRoot = (argStringPath) =>
+        fs.readdirSync(argStringPath).includes("package.json");
     //
     // Setup
     //
     /***/
     constructor() {
-
-        this.fieldStringPathDirProject = this._getStringPathDirProjectRoot()
-
-        this.fieldStringPathDirData = path.join( this.fieldStringPathDirProject, "data", )
-
-        this.fieldStringPathDirDataOutput = path.join( this.fieldStringPathDirData, "dataOutput", )
+        this.fieldStringPathDirProject = this._getStringPathDirProjectRoot();
+        this.fieldStringPathDirData = path.join(
+            this.fieldStringPathDirProject,
+            "data"
+        );
+        this.fieldStringPathDirDataOutput = path.join(
+            this.fieldStringPathDirData,
+            "dataOutput"
+        );
     }
 
     /**
      * This returns the path to the first dir that contains a "package.json" file
      *
-     * @returns {string | undefined}
+     * @returns {string|undefined}
      * */
     _getStringPathDirProjectRoot = () => {
-        let stringToReturn = path.resolve( "" )
+        let stringToReturn = path.resolve("");
         while (true) {
-            //
-            // Return the first dir that contains 'package.json'
-            //
-            if ( this.logicDirIsProjectRoot( stringToReturn ) ) { return stringToReturn }
-            //
-            // If we get to the root dir, then obviously this is a major error; return undefined
-            //
-            if ( stringToReturn === "/" ) { return undefined }
-            stringToReturn = path.dirname(stringToReturn)
+            switch (true) {
+                //
+                // Return the first dir that contains 'package.json'
+                //
+                case this.logicDirIsProjectRoot(stringToReturn):
+                    return stringToReturn;
+                //
+                // If we get to the root dir, then obviously this is a major error; return undefined
+                //
+                case stringToReturn === "/":
+                    return undefined;
+                default:
+                    stringToReturn = path.dirname(stringToReturn);
+            }
         }
-    }
+    };
 }
-let helperPathsProject = new HelperPathsProject()
-export default helperPathsProject
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//
+// Public
+//
+let helperPathsProject = new HelperPathsProject();
+export default helperPathsProject;

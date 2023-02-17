@@ -9,91 +9,49 @@ export default class helperPrinting {
      * @param {string} argStringMessage
      * @param {Function} argCallback
      * */
-    static wrapperPrintMessage = async ( argStringMessage, argCallback ) => {
-
-        const stringMessage = helperPrinting._getStringByCombiningArray( [ argStringMessage, "...", ] )
+    static wrapperPrintMessage = async (argStringMessage, argCallback) => {
+        const stringMessage = helperPrinting._getStringByCombiningArray([
+            argStringMessage,
+            "...",
+        ]);
         //
         // Print start
         //
-        console.log( helperPrinting._getStringByCombiningArray( [ stringMessage, "\n", ] ) )
+        console.log(
+            helperPrinting._getStringByCombiningArray([stringMessage, "\n"])
+        );
         //
         // Run callback
         //
-        const resultToReturn = await argCallback()
+        const resultToReturn = await argCallback();
         //
         // Print conclusion
         //
-        console.log( helperPrinting._getStringByCombiningArray( [ stringMessage, "DONE\n", ] ) )
+        console.log(
+            helperPrinting._getStringByCombiningArray([stringMessage, "DONE\n"])
+        );
         //
         // Return the callback
         //
-        return resultToReturn
-    }
+        return resultToReturn;
+    };
 
     /**
-     * @param {[]} argArrayOfStrings
+     * @param {string[]} argArrayOfStrings
      * @param {string} argStringDelimiter
      * */
-    static _getStringByCombiningArray = ( argArrayOfStrings, argStringDelimiter = "" ) => {
-        return argArrayOfStrings.length === 0
+    static _getStringByCombiningArray = (
+        argArrayOfStrings,
+        argStringDelimiter = ""
+    ) =>
+        argArrayOfStrings.length === 0
             ? ""
             : argArrayOfStrings.reduce(
-                ( itemPrev, item ) => {
-
-                    const itemStringPrev = typeof itemPrev === "symbol" ? itemPrev.toString() : `${itemPrev}`
-                    const itemString = typeof item === "symbol" ? item.toString() : `${item}`
-                    return itemStringPrev + argStringDelimiter + itemString
-                }
-            )
-    }
+                  (itemPrev, item) =>
+                      (typeof itemPrev === "symbol"
+                          ? itemPrev.toString()
+                          : `${itemPrev}`) +
+                      argStringDelimiter +
+                      (typeof item === "symbol" ? item.toString() : `${item}`)
+              );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

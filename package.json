@@ -1,26 +1,26 @@
 {
-  "author": "James Hazlett",
-  "description": "",
-  "license": "MIT",
-  "main": "src/index.js",
-  "name": "server_web_analyzer",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "main": "node src/index.js",
-    "mainNodemon": "./node_modules/nodemon/bin/nodemon.js src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "axios": "^0.27.2",
-    "chromedriver": "^104.0.0",
-    "easy-soap-request": "^5.1.0",
-    "express": "^4.18.1",
-    "nodemon": "^2.0.19",
-    "pretty_printer_for_humans": "^1.2.0",
-    "puppeteer": "^18.2.1",
-    "selenium-webdriver": "^4.4.0",
-    "soap": "^0.45.0",
-    "xml-js": "^1.6.11"
-  }
+    "author": "James Hazlett",
+    "description": "",
+    "license": "MIT",
+    "main": "src/index.js",
+    "name": "server_web_analyzer",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "main": "node src/index.js",
+        "mainNodemon": "./node_modules/nodemon/bin/nodemon.js src/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "chromedriver": "^104.0.0",
+        "easy-soap-request": "^5.1.0",
+        "express": "^4.18.1",
+        "nodemon": "^2.0.19",
+        "pretty_printer_for_humans": "^1.2.0",
+        "puppeteer": "^18.2.1",
+        "selenium-webdriver": "^4.4.0",
+        "soap": "^0.45.0",
+        "xml-js": "^1.6.11"
+    }
 }

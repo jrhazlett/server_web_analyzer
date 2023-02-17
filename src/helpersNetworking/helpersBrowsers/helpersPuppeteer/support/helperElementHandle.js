@@ -11,10 +11,9 @@ https://pptr.dev/api/puppeteer.elementhandle/
 //
 // Libraries - downloaded
 //
-import puppeteer, {
-    //ElementHandle,
-    //Page
-} from "puppeteer";
+import puppeteer from //ElementHandle,
+//Page
+"puppeteer";
 //
 // Public
 //
@@ -23,49 +22,48 @@ export default class HelperElementHandle {
     // Public
     //
     /***/
-    click = async () => { await this.fieldElementHandle.click() }
+    click = async () => await this.fieldElementHandle.click();
 
     /**
      * @returns string
      * */
-    getStringHref = async () => { return this.getStringValueAtAttribute( "href" ) }
+    getStringHref = async () => this.getStringValueAtAttribute("href");
 
     /**
      * @returns string
      * */
-    getStringInnerText = async () => { return this.getStringValueAtAttribute( "innerText" ) }
+    getStringInnerText = async () =>
+        this.getStringValueAtAttribute("innerText");
 
     /**
      * @returns string
      * */
-    getStringText = async () => { return this.getStringValueAtAttribute( "text" ) }
+    getStringText = async () => this.getStringValueAtAttribute("text");
 
     /**
      * @param {string} argStringNameAttribute
      * @returns string
      * */
-    getStringValueAtAttribute = async ( argStringNameAttribute ) => {
-        return this.fieldPage.evaluate(
-            ( ...argArrayOfArgs ) => {
-                return argArrayOfArgs[ 0 ].getAttribute( argArrayOfArgs[ 1 ] )
-            },
+    getStringValueAtAttribute = async (argStringNameAttribute) =>
+        this.fieldPage.evaluate(
+            (...argArrayOfArgs) =>
+                argArrayOfArgs[0].getAttribute(argArrayOfArgs[1]),
             this.fieldElementHandle,
-            argStringNameAttribute,
-        )
-    }
+            argStringNameAttribute
+        );
     //
     // Public - set
     //
     /**
      * @param {string} argStringValue
      * */
-    setValueForTextField = async ( argStringValue ) => {
+    setValueForTextField = async (argStringValue) => {
         //
         // Reminder: The three-click count is necessary to highlight all the text to replace it.
         //
-        await this.fieldElementHandle.click( { clickCount: 3 } )
-        await this.fieldElementHandle.type( argStringValue )
-    }
+        await this.fieldElementHandle.click({ clickCount: 3 });
+        await this.fieldElementHandle.type(argStringValue);
+    };
     //
     // Public - upload file
     // Reminder: Not sure which one works
@@ -76,10 +74,10 @@ export default class HelperElementHandle {
      * Source:
      * https://pptr.dev/api/puppeteer.filechooser
      * */
-    uploadFile = async ( argStringPathFile ) => {
-        await this.fieldPage.waitForFileChooser()
-        await this.fieldElementHandle.accept( [ argStringPathFile ] )
-    }
+    uploadFile = async (argStringPathFile) => {
+        await this.fieldPage.waitForFileChooser();
+        await this.fieldElementHandle.accept([argStringPathFile]);
+    };
 
     /**
      * @param {string} argStringPathFile
@@ -87,14 +85,15 @@ export default class HelperElementHandle {
      * Source:
      * https://stackoverflow.com/questions/59273294/how-to-upload-file-with-js-puppeteer
      * */
-    uploadFileOtherOption = async ( argStringPathFile ) => {
-        await this.fieldPage.waitForFileChooser()
+    uploadFileOtherOption = async (argStringPathFile) => {
+        await this.fieldPage.waitForFileChooser();
         this.fieldPage.evaluate(
-            ( ...argArrayOfArgs ) => { argArrayOfArgs[ 0 ].uploadFile( argArrayOfArgs[ 1 ] ) },
+            (...argArrayOfArgs) =>
+                argArrayOfArgs[0].uploadFile(argArrayOfArgs[1]),
             this.fieldElementHandle,
-            argStringPathFile,
-        )
-    }
+            argStringPathFile
+        );
+    };
     //
     // Setup
     //
@@ -102,66 +101,8 @@ export default class HelperElementHandle {
      * @param {ElementHandle} argElementHandle
      * @param {Page} argPage
      * */
-    constructor( argElementHandle, argPage ) {
-
-        this.fieldElementHandle = argElementHandle
-        this.fieldPage = argPage
+    constructor(argElementHandle, argPage) {
+        this.fieldElementHandle = argElementHandle;
+        this.fieldPage = argPage;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -9,53 +9,5 @@ export default class helperTime {
      * @param {number} argIntSecs
      * @returns number
      * */
-    static getIntSeconds = ( argIntSecs ) => { return argIntSecs * 1000 }
+    static getIntSeconds = (argIntSecs) => argIntSecs * 1000;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
