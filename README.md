@@ -1,3 +1,7 @@
+--WORK IN PROGRESS--
+--WORK IN PROGRESS--
+--WORK IN PROGRESS--
+--WORK IN PROGRESS--
 # Server web analyzer
 
 This is a sort of 'toolkit' client which supports multiple api interaction types. Its definitely
@@ -7,6 +11,18 @@ which can provide a generally stable-ish 'out of the box' execution without sign
 The general thought process is: I personally jump between languages a lot, and javascript / nodejs
 has been the key language lately. These wrappers are generally here to provide working examples,
 settings which avoid the pitfalls (from an outsider's perspective) of each library's default config.
+
+## Updates
+
+### 02/19/23
+
+- Removed selenium since its mostly redundant to puppeteer and doesn't reliably stays 'aligned' with
+web driver versions.
+- Reworked to accommodate upgraded puppeteer library.
+- Fixed bad function calls.
+- Streamlined the puppeteer code to do more with less.
+- Re-added curly braces to functions to support inserting debugging code if necessary.
+- Updated type notations for functions, so they match other repos / libraries.
 
 ## Files
 
@@ -48,3 +64,7 @@ Wrapper: src/helpersNetworking/helpersApiClients/helperApiClientSoap.js
 
 -   Includes example soap calls
 -   Includes example xml packages
+
+    --WORK IN PROGRESS--
+- --WORK IN PROGRESS--
+- --WORK IN PROGRESS--

@@ -84,8 +84,10 @@ class _helperLocal {
      * @param {Object} argMessageReceived
      * @returns Function
      * */
-    static getCallback = (argObject, argMessageReceived) =>
-        argObject[argMessageReceived.argStringNameForFunction];
+    static getCallback = (argObject, argMessageReceived) => {
+        return argObject[argMessageReceived.argStringNameForFunction];
+    }
+
 }
 //
 // NOTE: This runs on the 2nd thread

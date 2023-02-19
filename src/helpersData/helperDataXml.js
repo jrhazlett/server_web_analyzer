@@ -16,6 +16,7 @@ export default class helperDataXml {
     //
     /**
      * @param {string} argStringXml
+     * @returns {Object}
      * */
-    static getObjectFromXml = (argStringXml) => xml2js(argStringXml);
+    static getObjectFromXml = (argStringXml) => { return xml2js(argStringXml); }
 }

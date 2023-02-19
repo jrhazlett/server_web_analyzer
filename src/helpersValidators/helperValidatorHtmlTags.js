@@ -20,7 +20,7 @@ export default class helperValidatorHtmlTags {
     //
     /**
      * @param {string} argStringXpath
-     * @returns { Error | undefined }
+     * @returns {Error|undefined}
      *
      * Example valid path: //div//h1
      * Example invalid path: //dev//h1
@@ -62,7 +62,7 @@ export default class helperValidatorHtmlTags {
                 itemString =
                     helperValidatorHtmlTags._getStringMostLikelyTag(itemString);
                 if (
-                    !helperValidatorHtmlTags.logicStringIsValidHtmlTagNoAngleBrackets(
+                    !helperValidatorHtmlTags.isStringIsValidHtmlTagNoAngleBrackets(
                         itemString
                     )
                 ) {
@@ -96,8 +96,9 @@ export default class helperValidatorHtmlTags {
      * @param {string} argString
      * @returns {boolean}
      * */
-    static logicStringIsValidHtmlTag = (argString) =>
-        helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS.has(argString);
+    static isStringValidHtmlTag = (argString) => {
+        return helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS.has(argString);
+    }
 
     /**
      * Reminder: strings missing '<>' *will* return false
@@ -105,10 +106,11 @@ export default class helperValidatorHtmlTags {
      * @param {string} argString
      * @returns {boolean}
      * */
-    static logicStringIsValidHtmlTagNoAngleBrackets = (argString) =>
-        helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has(
+    static isStringIsValidHtmlTagNoAngleBrackets = (argString) => {
+        return helperValidatorHtmlTags.FIELD_SET_OF_STANDARD_HTML_TAGS_NO_ANGLE_BRACKETS.has(
             argString
         );
+    }
 
     /**
      * Returns 'false' if not all tags exist in the standard set
@@ -118,7 +120,7 @@ export default class helperValidatorHtmlTags {
      * @param {string} argStringXpath
      * @returns {boolean}
      * */
-    static logicXpathHasOnlyStandardHtmlTags = (argStringXpath) => {
+    static isXpathContainingOnlyStandardHtmlTags = (argStringXpath) => {
         //
         // A complex
         //

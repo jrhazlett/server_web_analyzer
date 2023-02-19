@@ -61,7 +61,7 @@ class _helperEnumDataTypes {
 
     /**
      * @param {any} arg
-     * @returns number
+     * @returns {number}
      * */
     static getEnumDataType = (arg) => {
         switch (typeof arg) {
@@ -80,7 +80,7 @@ class _helperEnumDataTypes {
 
     /**
      * @param {Object} argObject
-     * @return number
+     * @return {number}
      * */
     static _getEnumDataTypeForObject = (argObject) => {
         switch (true) {
@@ -103,10 +103,11 @@ class _helperEnumDataTypes {
 
     /**
      * @param {number} argEnumType
-     * @returns boolean
+     * @returns {boolean}
      * */
-    static isEnumTypeToProcess = (argEnumType) =>
-        _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType);
+    static isEnumTypeToProcess = (argEnumType) => {
+        return _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType);
+    }
 }
 //
 // Public
@@ -120,7 +121,7 @@ export default class helperDataPathing {
      *
      * @param {any[]} argArrayPath
      * @param {object} arg
-     * @returns any
+     * @returns {any}
      * */
     static getValueAtPath = (argArrayPath, arg) => {
         let intIndexLast = argArrayPath.length - 1;
@@ -204,7 +205,7 @@ export default class helperDataPathing {
      * @param {number} argIntIndexOfFailure
      * @param {object} argObjectRoot
      * @param {object} argObjectOfFailure
-     * @returns Error
+     * @returns {Error}
      * */
     static _getErrorBecausePathFailed(
         argArrayPath,
@@ -256,6 +257,7 @@ export default class helperDataPathing {
     /**
      * @param {string[]} argArrayOfStrings
      * @param {string} argStringDelimiter
+     * @returns {string}
      * */
     static _getStringByCombiningArray = (
         argArrayOfStrings,

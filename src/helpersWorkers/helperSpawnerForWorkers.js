@@ -25,8 +25,8 @@ export default class helperSpawnerForWorkers {
      * @param {any[]} argArrayPath
      * @returns {Promise}
      */
-    static getPromiseForSpawnedWorker = async (arg, argArrayPath) =>
-        new Promise((resolve, reject) => {
+    static getPromiseForSpawnedWorker = async (arg, argArrayPath) => {
+        return new Promise((resolve, reject) => {
             const worker = new Worker(stringPathWorker, { type: "module" });
             //
             // Return on success
@@ -47,4 +47,5 @@ export default class helperSpawnerForWorkers {
                 argStringNameForFunction: "getValueAtPathInArg",
             });
         });
+    }
 }

@@ -34,7 +34,7 @@ export default class helperEnumDataTypes {
 
     /**
      * @param {any} arg
-     * @returns number
+     * @returns {number}
      * */
     static getEnumDataType = (arg) => {
         switch (typeof arg) {
@@ -53,7 +53,7 @@ export default class helperEnumDataTypes {
 
     /**
      * @param {Object} argObject
-     * @return number
+     * @return {number}
      * */
     static _getEnumDataTypeForObject = (argObject) => {
         switch (true) {
@@ -76,7 +76,7 @@ export default class helperEnumDataTypes {
 
     /**
      * @param {any} arg
-     * @returns string
+     * @returns {string}
      * */
     static getStringDataType = (arg) => {
         const stringDataType = typeof arg;
@@ -112,16 +112,18 @@ export default class helperEnumDataTypes {
 
     /**
      * @param {any} arg
-     * @returns boolean
+     * @returns {boolean}
      * */
-    static isComplexArg = (arg) =>
-        helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(
+    static isComplexArg = (arg) => {
+        return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(
             helperEnumDataTypes.getEnumDataType(arg)
         );
+    }
+
 
     /**
      * @param {number} argEnumType
-     * @returns boolean
+     * @returns {boolean}
      * */
     static isComplexEnumType = (argEnumType) =>
         helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(argEnumType);

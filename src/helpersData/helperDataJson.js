@@ -13,12 +13,11 @@ export default class helperDataJson {
     //
     /**
      * @param {string} argStringJson
-     * @returns any
+     * @returns {any}
      *
      * Reminder: The return type for this func is the same as JSON.parse()'s return type
      * */
-    static getObjectFromJsonString = (argStringJson) =>
-        JSON.parse(argStringJson);
+    static getObjectFromJsonString = (argStringJson) => { return JSON.parse(argStringJson); }
 
     /**
      * This attempts to get the value stored at the end of path
@@ -31,7 +30,7 @@ export default class helperDataJson {
      *
      * @param {any} arg
      * @param {any[]} argArrayPath
-     * @returns any
+     * @returns {any}
      * */
     static getValueAtPathInArg = (argArrayPath, arg) => {
         const arrayOfKeysThatExist = [];
@@ -108,7 +107,7 @@ export default class helperDataJson {
      * @param {any[]} argArrayOfKeysThatExistToUpdate
      * @param {any[]} argArrayPath
      * @param {any} argKey
-     * @returns any
+     * @returns {any}
      * */
     static _getValueAtPathInArgArray = (
         argArray,
@@ -217,7 +216,7 @@ export default class helperDataJson {
      * @param {any[]} argArrayPath
      * @param {any[]} argArrayPathThatExists
      * @param {any} argKeyAtFailure
-     * @returns Error
+     * @returns {Error}
      * */
     static _getErrorBecausePathFailed = (
         arg,
@@ -281,6 +280,7 @@ export default class helperDataJson {
 
     /**
      * @param {any} argKey
+     * @returns {number}
      * */
     static _getIntIndexFromKey = (argKey) => {
         switch (typeof argKey) {

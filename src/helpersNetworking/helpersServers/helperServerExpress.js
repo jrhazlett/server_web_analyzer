@@ -30,7 +30,7 @@ export default class HelperServerExpress {
      * @param {string} argEnumRestMethod
      * @param {string} argStringRoute
      * @param {Function} argCallbackWithReqAndRes
-     * @returns Error | null
+     * @returns {Error|undefined}
      * */
     addCallbackToRouter = (
         argEnumRestMethod,
@@ -44,7 +44,7 @@ export default class HelperServerExpress {
             this.fieldServer[argEnumRestMethod](argStringRoute, (req, res) =>
                 argCallbackWithReqAndRes(req, res)
             );
-            return null;
+            return undefined;
         } else {
             return helperErrors.raiseError(
                 Error(
@@ -57,7 +57,7 @@ export default class HelperServerExpress {
     // Public - run
     //
     /**
-     * @returns this
+     * @returns {this}
      * */
     runServer() {
         this.fieldServer.listen(this.fieldIntPort, () =>
@@ -72,7 +72,7 @@ export default class HelperServerExpress {
      * This can be set at any time before running the server
      *
      * @param {number} argIntPort
-     * @returns this
+     * @returns {this}
      * */
     setPort(argIntPort) {
         this.fieldIntPort = argIntPort;
@@ -81,6 +81,7 @@ export default class HelperServerExpress {
     //
     // Setup
     //
+    /***/
     constructor() {
         this.fieldIntPort = 8001;
         this.fieldServer = express();

@@ -12,9 +12,15 @@ export default class helperFiles {
     //
     /**
      * @param {string} argStringPathFile
+     * @returns {Object}
      * */
-    static getStringFromFile = (argStringPathFile) =>
-        fs.readFileSync(argStringPathFile, "utf-8");
+    static getObjectFromFile = ( argStringPathFile ) => JSON.parse( fs.readFileSync( argStringPathFile, { encoding: "utf-8" }, ) )
+
+    /**
+     * @param {string} argStringPathFile
+     * @returns {string}
+     * */
+    static getStringFromFile = (argStringPathFile) => { return fs.readFileSync(argStringPathFile, "utf-8"); }
     //
     // Public - raise
     //

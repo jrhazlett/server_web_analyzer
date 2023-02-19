@@ -11,9 +11,8 @@ https://pptr.dev/api/puppeteer.elementhandle/
 //
 // Libraries - downloaded
 //
-import puppeteer from //ElementHandle,
-//Page
-"puppeteer";
+import puppeteer from "puppeteer";
+import prettyPrinterForHumans from "pretty_printer_for_humans";
 //
 // Public
 //
@@ -22,35 +21,19 @@ export default class HelperElementHandle {
     // Public
     //
     /***/
-    click = async () => await this.fieldElementHandle.click();
-
-    /**
-     * @returns string
-     * */
-    getStringHref = async () => this.getStringValueAtAttribute("href");
-
-    /**
-     * @returns string
-     * */
-    getStringInnerText = async () =>
-        this.getStringValueAtAttribute("innerText");
-
-    /**
-     * @returns string
-     * */
-    getStringText = async () => this.getStringValueAtAttribute("text");
+    click = async () => { await this.fieldElementHandle.click() }
 
     /**
      * @param {string} argStringNameAttribute
-     * @returns string
+     * @returns {Promise}
      * */
-    getStringValueAtAttribute = async (argStringNameAttribute) =>
-        this.fieldPage.evaluate(
-            (...argArrayOfArgs) =>
-                argArrayOfArgs[0].getAttribute(argArrayOfArgs[1]),
+    getStringValueAtAttribute = async (argStringNameAttribute) => {
+        return this.fieldPage.evaluate(
+            async (...argArrayOfArgs) => { return argArrayOfArgs[ 0 ][ argArrayOfArgs[ 1 ] ] },
             this.fieldElementHandle,
-            argStringNameAttribute
+            argStringNameAttribute,
         );
+    }
     //
     // Public - set
     //
@@ -61,7 +44,7 @@ export default class HelperElementHandle {
         //
         // Reminder: The three-click count is necessary to highlight all the text to replace it.
         //
-        await this.fieldElementHandle.click({ clickCount: 3 });
+        await this.fieldElementHandle.click({clickCount: 3});
         await this.fieldElementHandle.type(argStringValue);
     };
     //
@@ -88,8 +71,7 @@ export default class HelperElementHandle {
     uploadFileOtherOption = async (argStringPathFile) => {
         await this.fieldPage.waitForFileChooser();
         this.fieldPage.evaluate(
-            (...argArrayOfArgs) =>
-                argArrayOfArgs[0].uploadFile(argArrayOfArgs[1]),
+            (...argArrayOfArgs) => {return argArrayOfArgs[0].uploadFile(argArrayOfArgs[1])},
             this.fieldElementHandle,
             argStringPathFile
         );
@@ -98,7 +80,7 @@ export default class HelperElementHandle {
     // Setup
     //
     /**
-     * @param {ElementHandle} argElementHandle
+     * @param {puppeteer.ElementHandle} argElementHandle
      * @param {Page} argPage
      * */
     constructor(argElementHandle, argPage) {

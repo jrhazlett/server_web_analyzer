@@ -30,6 +30,7 @@ export default class helperApiClientSoap {
     /**
      * @param {string} argStringUrl
      * @param {string} argStringXmlPayload
+     * @returns {Object}
      * */
     static getWsoExample = async (argStringUrl, argStringXmlPayload) => {
         /*
@@ -68,6 +69,7 @@ export default class helperApiClientSoap {
      * @param {string} argStringUrl
      * @param {string} argStringXmlForRequest
      * @param {Object} argObjectHeaders
+     * @returns {Object}
      * */
     static getObjectResponseViaRequest = async (
         argStringUrl,
@@ -110,13 +112,13 @@ export default class helperApiClientSoap {
 
     /**
      * @param {Object} argResponse
+     * @returns {number}
      * */
-    static getIntResponseCodeFromResponse = (argResponse) =>
-        argResponse.statusCode;
+    static getIntResponseCodeFromResponse = (argResponse) => {return argResponse.statusCode;}
 
     /**
      * @param {string} argStringPathFileXml
-     * @returns Object
+     * @returns {Object}
      * */
     static getObjectDataFromFileXML = (argStringPathFileXml) =>
         helperDataXml.getObjectFromXml(
@@ -125,13 +127,14 @@ export default class helperApiClientSoap {
 
     /**
      * @param {Object} argObjectResponse
+     * @returns {Object}
      * */
     static getObjectDataFromResponse = (argObjectResponse) =>
         helperDataXml.getObjectFromXml(argObjectResponse.body);
 
     /**
      * @param {string} argStringUrlSoapAction
-     * @returns Object
+     * @returns {Object}
      * */
     static getObjectHeadersForSoapRequest = (argStringUrlSoapAction) => ({
         "Content-Type": "text/xml;charset=UTF-8",
@@ -141,9 +144,11 @@ export default class helperApiClientSoap {
 
     /**
      * @param {Object} argObjectResponse
+     * @returns {string}
      * */
-    static getStringXmlDataFromResponse = (argObjectResponse) =>
-        argObjectResponse.body;
+    static getStringXmlDataFromResponse = (argObjectResponse) => {
+        return argObjectResponse.body;
+    }
     //
     // Public - print
     //
@@ -170,6 +175,7 @@ export default class helperApiClientSoap {
 
     /**
      * @param {number} argIntSecs
+     * @returns {number}
      * */
     static _getIntSeconds = (argIntSecs) => argIntSecs * 1000;
 }

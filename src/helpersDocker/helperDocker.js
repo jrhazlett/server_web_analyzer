@@ -7,7 +7,10 @@ import fs from "fs";
 //
 export default class helperDocker {
     //
-    // Public - logic
+    // Public - is
     //
-    static logicIsRunningInDocker = () => fs.existsSync("/.dockerenv");
+    /**
+     * @returns {boolean}
+     * */
+    static isRunningInDocker = () => { return fs.existsSync("/.dockerenv"); }
 }

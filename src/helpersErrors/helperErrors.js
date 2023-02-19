@@ -7,7 +7,7 @@ class HelpersErrors {
     //
     /**
      * @param {Error} argError
-     * @returns Error
+     * @returns {Error}
      * */
     raiseError = (argError) => {
         if (this.fieldBoolHaltAppOnError) {
@@ -18,6 +18,7 @@ class HelpersErrors {
     //
     // Setup
     //
+    /***/
     constructor() {
         this.fieldBoolHaltAppOnError = false;
     }

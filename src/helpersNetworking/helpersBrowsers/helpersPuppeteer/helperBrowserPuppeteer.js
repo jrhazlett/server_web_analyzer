@@ -23,20 +23,16 @@ export default class HelperBrowserPuppeteer {
     /**
      * Reminder: Actual form filling is handled for setValuesForFieldsAtXpathsViaArrayOfPairsAndSubmitForm()
      * */
-    clickSubmitOnForm = async () =>
-        await this.fieldPage.click('input[type="submit"]');
+    clickSubmitOnForm = async () => { await this.fieldPage.click('input[type="submit"]'); }
 
     /**
      * @param {string} argStringXpath
      * */
     clickXpath = async (argStringXpath) => {
-        const arrayOfHelperElementHandlesViaXpath =
-            await this.getArrayOfHelperElementHandlesViaXpath(argStringXpath);
+        const arrayOfHelperElementHandlesViaXpath = await this.getArrayOfHelperElementHandlesViaXpath(argStringXpath);
         let itemIndex = -1;
         const intLength = arrayOfHelperElementHandlesViaXpath.length;
-        while (++itemIndex < intLength) {
-            await arrayOfHelperElementHandlesViaXpath[itemIndex].click();
-        }
+        while (++itemIndex < intLength) { await arrayOfHelperElementHandlesViaXpath[itemIndex].click(); }
     };
     //
     // Public - close
@@ -46,30 +42,30 @@ export default class HelperBrowserPuppeteer {
      * so this function doesn't necessary need to be called.
      * */
     closeBrowser = () => {
-        if (this.fieldBrowser !== undefined) {
-            this.fieldBrowser.close();
-        }
+        if (this.fieldBrowser !== undefined) { this.fieldBrowser.close(); }
     };
     //
     // Public - get - getArrayOfHelperElementHandlesViaXpath
     //
     /**
      * @param {string} argStringXpath
-     * @returns []
+     * @returns Promise
      * */
-    getArrayOfHelperElementHandlesViaXpath = async (argStringXpath) =>
-        new Promise(async (resolve) =>
+    getArrayOfHelperElementHandlesViaXpath = async (argStringXpath) => {
+        return new Promise(async (resolve) => {
             resolve(
                 this._getArrayOfHelperElementHandlesFromArrayOfElementHandles(
                     await this._getArrayOfWebElementsViaXpath(argStringXpath)
                 )
             )
-        );
+        } );
+    }
 
     /**
      * @param {string} argStringXpath
+     * @returns {Promise}
      *
-     * Notes: Must be in the following format or else this will triger an undefined error
+     * Notes: Must be in the following format or else this will trigger an undefined error
      * ( ...argArray ) => argArray.map( itemWebElement => itemWebElement.attributeToGet )
      * */
     _getArrayOfWebElementsViaXpath = async (argStringXpath) => {
@@ -85,62 +81,55 @@ export default class HelperBrowserPuppeteer {
             return err;
         }
 
-        return new Promise(async (resolve) =>
+        return new Promise(async (resolve) => {
             resolve(await this.fieldPage.$x(argStringXpath))
-        );
+        } );
     };
 
     /**
-     * @param {ElementHandle[]} argArrayOfElementHandles
+     * @param {puppeteer.ElementHandle[]} argArrayOfElementHandles
      * @returns {HelperElementHandle[]}
      * */
-    _getArrayOfHelperElementHandlesFromArrayOfElementHandles = (
-        argArrayOfElementHandles
-    ) =>
-        argArrayOfElementHandles.map(
-            (itemElementHandle) =>
-                new HelperElementHandle(itemElementHandle, this.fieldPage)
-        );
+    _getArrayOfHelperElementHandlesFromArrayOfElementHandles = ( argArrayOfElementHandles ) => { return argArrayOfElementHandles.map( (itemElementHandle) => { return new HelperElementHandle(itemElementHandle, this.fieldPage) } ); }
+
     //
     // Public - get - array
     //
     /**
-     * @returns []
+     * @returns {Promise}
      * */
-    getArrayOfStringsLinksText = async () =>
-        Promise.all(
-            (await this.getArrayOfHelperElementHandlesViaXpath("//a[@href]"))
-                .map((itemHelperElementHandle) => itemHelperElementHandle)
-                .getStringText()
-        );
+    getArrayOfStringsLinksText = async () => { return this.getArrayOfStringsViaXpath( "//a[@href]", "innerText", ) }
 
     /**
-     * @returns []
+     * @returns {Promise}
      * */
-    getArrayOfStringsLinksUrl = async () =>
-        Promise.all(
-            (
-                await this.getArrayOfHelperElementHandlesViaXpath("//a[@href]")
-            ).map((itemHelperElementHandle) =>
-                itemHelperElementHandle.getStringUrl()
-            )
-        );
+    getArrayOfStringsLinksUrl = async () => { return this.getArrayOfStringsViaXpath( "//a[@href]", "href", ) }
 
     /**
-     * @returns []
+     * @returns {Promise}
      * */
-    getArrayOfStringsParagraphsText = async () =>
-        Promise.all(
-            this.getArrayOfHelperElementHandlesViaXpath("//p").map(
-                (itemHelperElementHandle) =>
-                    itemHelperElementHandle.getStringInnerText()
-            )
-        );
+    getArrayOfStringsParagraphsText = async () => { return this.getArrayOfStringsViaXpath( "//p", "innerText", ) }
+
+    /**
+     * @param {string} argStringXpath
+     * @param {string} argStringNameForAttribute
+     * */
+    getArrayOfStringsViaXpath = async ( argStringXpath, argStringNameForAttribute ) => {
+        return Promise.all( ( await this.getArrayOfHelperElementHandlesViaXpath( argStringXpath ) )
+            .map( async ( itemHelperElementHandle ) => {
+                return await this.fieldPage.evaluate(
+                    async (...argArrayOfArgs) => { return argArrayOfArgs[ 0 ][ argArrayOfArgs[ 1 ] ] },
+                    itemHelperElementHandle.fieldElementHandle,
+                    argStringNameForAttribute,
+                )
+            }
+        ) )
+    }
     //
     // Public - get - getErrorIfPageLoadNotWaitedFor
     //
     /**
-     * @returns { Error | undefined }
+     * @returns {Error|undefined}
      * */
     getErrorIfPageLoadNotWaitedFor = () => {
         return this.fieldBoolXpathLoaded
@@ -162,15 +151,14 @@ export default class HelperBrowserPuppeteer {
     // Public - get - getStringSourceForPage
     //
     /**
-     * @returns string
+     * @returns {string}
      * */
-    getStringSourceForPage = async () =>
-        new Promise(async (resolve) => resolve(await this.fieldPage.content()));
+    getStringSourceForPage = async () => { return new Promise(async (resolve) => { resolve(await this.fieldPage.content()) } ); }
     //
     // Public - get - getStringTitle
     //
     /**
-     * @returns string
+     * @returns {string}
      * */
     getStringTitle = async () => {
         //
@@ -179,12 +167,10 @@ export default class HelperBrowserPuppeteer {
         // Also, at this point, there's a whole bunch of guiding logic underlying the
         // page loads. This approach keeps the behavior consistent.
         //
-        const arrayToReturn = await this.getArrayOfHelperElementHandlesViaXpath(
-            "//title"
-        );
-        return arrayToReturn.length > 0
-            ? arrayToReturn[0].getStringInnerText()
-            : undefined;
+        return ( await this.getArrayOfStringsViaXpath(
+            "//title",
+            "innerText"
+        ) )[ 0 ]
     };
     //
     // Public - load
@@ -192,16 +178,17 @@ export default class HelperBrowserPuppeteer {
     /**
      * @param {string} argStringPathFile
      * */
-    setCookiesWithDataFromFile = async (argStringPathFile) =>
-        await this.fieldPage.setCookie(
+    setCookiesWithDataFromFile = async (argStringPathFile) => {
+        return await this.fieldPage.setCookie(
             helperFiles.getObjectFromFile(argStringPathFile)
         );
+    }
     //
     // Public - set
     //
     /**
      * @param {string} argStringUrl
-     * @returns this
+     * @returns {this}
      * */
     setUrl = async (argStringUrl) => {
         this.fieldBoolXpathLoaded = false;
@@ -235,12 +222,12 @@ export default class HelperBrowserPuppeteer {
     /**
      * @param {string} argStringXpath
      * @param {string} argStringValue
-     * @returns any[]
+     * @returns {any[]}
      *
      * The array contains web elements
      * */
-    setValueForTextFieldAtXpath = async (argStringXpath, argStringValue) =>
-        Promise.all(
+    setValueForTextFieldAtXpath = async (argStringXpath, argStringValue) => {
+        return Promise.all(
             (
                 await this.getArrayOfHelperElementHandlesViaXpath(
                     argStringXpath
@@ -249,6 +236,7 @@ export default class HelperBrowserPuppeteer {
                 itemHelperElementHandle.setValueForTextField(argStringValue)
             )
         );
+    }
 
     /**
      * @param {(string)[][]} argArrayOfPairsStringXpathsAndStringValues
@@ -295,11 +283,12 @@ export default class HelperBrowserPuppeteer {
     /**
      * @param {string} argStringPathFile
      * */
-    writeCookiesForCurrentPageToFile = async (argStringPathFile) =>
-        helperFiles.writeObjectToFile(
+    writeCookiesForCurrentPageToFile = async (argStringPathFile) => {
+        await helperFiles.writeObjectToFile(
             argStringPathFile,
             await this.fieldPage.cookies()
         );
+    }
 
     /**
      * @param {string} argStringPathFilePicture
@@ -338,6 +327,7 @@ export default class HelperBrowserPuppeteer {
 
     /**
      * @param {string} argStringXpath
+     * @returns {(undefined|Error)}
      * */
     _getErrorIfXpathInvalid = (argStringXpath) => {
         return !HelperBrowserPuppeteer.FIELD_SET_OF_KNOWN_INVALID_XPATHS.has(
@@ -365,7 +355,7 @@ export default class HelperBrowserPuppeteer {
 
     /**
      * @param {number} argIntSecs
-     * @returns number
+     * @returns {number}
      *
      * Example: 30000 equates to 30 seconds
      * */
@@ -373,16 +363,17 @@ export default class HelperBrowserPuppeteer {
 
     /**
      * @param {string[]} argArrayOfStrings
-     * @returns string
+     * @returns {string}
      * */
-    _getStringArrayPrintable = (argArrayOfStrings) =>
-        argArrayOfStrings.length === 0
+    _getStringArrayPrintable = (argArrayOfStrings) => {
+        return argArrayOfStrings.length === 0
             ? `[]`
             : `[ ` +
-              argArrayOfStrings.reduce((itemStringPrev, itemString) => {
-                  return itemStringPrev + ", " + itemString;
-              }) +
-              ` ]`;
+            argArrayOfStrings.reduce((itemStringPrev, itemString) => {
+                return itemStringPrev + ", " + itemString;
+            }) +
+            ` ]`;
+    }
     //
     // Setup
     //

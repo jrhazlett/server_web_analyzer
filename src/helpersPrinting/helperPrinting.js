@@ -39,6 +39,7 @@ export default class helperPrinting {
     /**
      * @param {string[]} argArrayOfStrings
      * @param {string} argStringDelimiter
+     * @returns {string}
      * */
     static _getStringByCombiningArray = (
         argArrayOfStrings,

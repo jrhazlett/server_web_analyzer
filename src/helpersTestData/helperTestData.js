@@ -6,7 +6,7 @@ export default class helperTestData {
     // Public - get - arrays
     //
     /**
-     * @returns any[]
+     * @returns {any[]}
      * */
     static getArrayNestedSimple = () => [
         "zero",
@@ -31,7 +31,7 @@ export default class helperTestData {
     // Public - get - object
     //
     /**
-     * @returns {object}
+     * @returns {Object}
      * */
     static getObjectNestedComplex = () => ({
         //
@@ -76,7 +76,7 @@ export default class helperTestData {
         },
     });
     /**
-     * @returns {object}
+     * @returns {Object}
      * */
     static getObjectNestedSimple = () => ({
         //
@@ -102,7 +102,7 @@ export default class helperTestData {
     // Public - string
     //
     /**
-     * @returns string
+     * @returns {string}
      * */
     static getStringUrlExampleCom = () => "http://example.com/";
 }

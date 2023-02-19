@@ -102,8 +102,7 @@ class _helperEnumDataTypes {
      * @param {number} argEnumType
      * @returns boolean
      * */
-    static isEnumTypeToProcess = (argEnumType) =>
-        _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType);
+    static isEnumTypeToProcess = (argEnumType) => { return _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType); }
 }
 //
 // Class
@@ -117,7 +116,7 @@ class _HelperItemForStack {
      * @param {number} argInputOneEnumDataType
      * @param {any} argInputTwo
      * @param {number} argInputTwoEnumDataType
-     * @param {[]} argStack
+     * @param {_HelperItemForStack[]} argStack
      * @param {Set} argSetTrackerForCircularReferences
      * */
     constructor(

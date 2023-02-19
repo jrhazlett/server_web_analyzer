@@ -58,7 +58,7 @@ class _helperEnumDataTypes {
 
     /**
      * @param {any} arg
-     * @returns number
+     * @returns {number}
      * */
     static getEnumDataType = (arg) => {
         switch (typeof arg) {
@@ -77,7 +77,7 @@ class _helperEnumDataTypes {
 
     /**
      * @param {Object} argObject
-     * @return number
+     * @return {number}
      * */
     static _getEnumDataTypeForObject = (argObject) => {
         switch (true) {
@@ -100,7 +100,7 @@ class _helperEnumDataTypes {
 
     /**
      * @param {number} argEnumType
-     * @returns boolean
+     * @returns {boolean}
      * */
     static isEnumTypeToProcess = (argEnumType) =>
         _helperEnumDataTypes.fieldSetOfTypesToProcess.has(argEnumType);
@@ -112,6 +112,15 @@ export class HelperStackItem {
     //
     // Setup
     //
+    /**
+     * @param {any} argInput
+     * @param {any} argInputKey
+     * @param {number} argInputType
+     * @param {any} argOutput
+     * @param {any} argOutputKey
+     * @param {Map} argMapToPreventCircularReferences
+     * @param {HelperStackItem[]} argStackToProcess
+     * */
     constructor(
         argInput,
         argInputKey,
@@ -140,16 +149,10 @@ export default class helperCopying {
     //
     /**
      * @param {any} argInput
-     * @returns any
+     * @returns {any}
      * */
     static getCopy = (argInput) => {
         //
-        // Reminders:
-        // This should *not* attempt to copy promises
-        // Error objects, I'm on the fence about
-        //
-        const mapToPreventCircularReferences = new Map();
-
         // If arg isn't complex, then its immutable, so just return arg
         const enumType = _helperEnumDataTypes.getEnumDataType(argInput);
         if (!_helperEnumDataTypes.isEnumTypeToProcess(enumType)) {
@@ -168,7 +171,7 @@ export default class helperCopying {
                 enumType,
                 outputToReturn,
                 undefined,
-                mapToPreventCircularReferences,
+                new Map(),
                 stackToProcess
             )
         );
@@ -420,7 +423,7 @@ export default class helperCopying {
     //
     /**
      * @param {any} arg
-     * @returns any
+     * @returns {any}
      * */
     static _getOutput = (arg) => {
         const enumType = _helperEnumDataTypes.getEnumDataType(arg);

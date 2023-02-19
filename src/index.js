@@ -10,7 +10,6 @@ import helperApiClientSoap from "./helpersNetworking/helpersApiClients/helperApi
 
 import helperApp from "./helpersApp/helperApp.js";
 
-import HelperBrowserSelenium from "./helpersNetworking/helpersBrowsers/helpersSelenium/helperBrowserSelenium.js";
 import HelperBrowserPuppeteer from "./helpersNetworking/helpersBrowsers/helpersPuppeteer/helperBrowserPuppeteer.js";
 
 import helperFiles from "./helpersDisk/helpersFiles/helperFiles.js";
@@ -19,8 +18,6 @@ import helperPaths from "./helpersDisk/helpersPaths/helperPaths.js";
 import helperPathsProject from "./helpersDisk/helpersPaths/helperPathsProject.js";
 
 import helperValidatorHtmlTags from "./helpersValidators/helperValidatorHtmlTags.js";
-
-import HelperXpathsAndValues from "./helpersXpathsAndValues/helperXpathsAndValues.js";
 //
 // Public
 //
@@ -71,58 +68,30 @@ class helperExampleTasks {
         //
         const stringUrl = "http://example.com";
 
-        const stringXpath = "//div//h1";
+        const stringXpath = "//p";
         //
         // Validation
         //
-        const err =
-            helperValidatorHtmlTags.getErrorIfXpathDoesNotHaveOnlyStandardTasks(
-                stringXpath
-            );
-        if (err !== undefined) {
-            console.log(err);
-        }
+        const err = helperValidatorHtmlTags.getErrorIfXpathDoesNotHaveOnlyStandardTasks( stringXpath );
+        if (err !== undefined) {console.log(err);}
         //
         // Web scrape
         //
         const helperBrowserPuppeteer = new HelperBrowserPuppeteer();
+        await helperBrowserPuppeteer.setUrlAndWaitForXpath( stringUrl, stringXpath, )
 
         const result = await helperBrowserPuppeteer.getArrayOfStringsViaXpath(
-            stringUrl,
             stringXpath,
-            (...arrayOfWebElements) =>
-                arrayOfWebElements.map(
-                    (itemWebElement) => itemWebElement.innerText
-                )
-        );
-        //
-        // Output
-        //
-        prettyPrinterForHumans.pprint(result, {
-            argStringNameToOutput: "result (runCodeExternal)",
-            argStringTrailingSpace: "\n",
-        });
-    };
+            "innerText",
+        )
 
-    /**
-     * WARNING: Right now, the available driver is incompatible with current chrome
-     * */
-    static runWebScrapeSelenium = async () => {
-        const stringUrl = "http://example.com";
-
-        const stringXpath = "//div//h1";
-
-        const helperBrowserSelenium = new HelperBrowserSelenium({});
-
-        await helperBrowserSelenium.loadUrl(stringUrl);
-
-        const arrayOfStringsLinks =
-            helperBrowserSelenium.getArrayOfStringsLinks();
-
-        prettyPrinterForHumans.pprint(arrayOfStringsLinks, {
-            argStringNameToOutput: "arrayOfStringsLinks",
-            argStringTrailingSpace: "\n",
-        });
+        prettyPrinterForHumans.pprint(
+            result,
+            {
+                argStringNameToOutput: "result",
+                argStringTrailingSpace: " ",
+            }
+        )
     };
 
     /***/
@@ -153,7 +122,7 @@ const main = async () => {
     //await helperExampleTasks.runApiRestRequest()
     //await helperExampleTasks.runApiSoapRequest()
 
-    //await helperExampleTasks.runWebScrapePuppeteer()
+    await helperExampleTasks.runWebScrapePuppeteer()
     //await helperExampleTasks.runWebScrapeSelenium()
 
     //await helperExampleTasks.runSubmitFormPuppeteer()

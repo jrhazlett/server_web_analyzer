@@ -11,16 +11,20 @@ export default class helperPaths {
     //
     /**
      * @param {string[]} argArrayOfStrings
-     * @returns string
+     * @returns {string}
      * */
-    static getPathByCombiningStrings = (argArrayOfStrings) =>
-        path.join(...argArrayOfStrings);
+    static getPathByCombiningStrings = (argArrayOfStrings) => {
+        return path.join(...argArrayOfStrings);
+    }
+
     //
     // Public - is
     //
     /**
      * @param {string} argStringPath
-     * @returns boolean
+     * @returns {boolean}
      * */
-    static isPathAbsolute = (argStringPath) => path.isAbsolute(argStringPath);
+    static isPathAbsolute = (argStringPath) => {
+        return path.isAbsolute(argStringPath);
+    }
 }

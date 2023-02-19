@@ -17,13 +17,13 @@ class HelperPathsProject {
     //
     /**
      * @param {string} argStringPath
-     * @returns string
+     * @returns {string}
      * */
-    getStringPathAncestor = (argStringPath) => path.dirname(argStringPath);
+    getStringPathAncestor = (argStringPath) => { return path.dirname(argStringPath); }
 
     /**
      * @param {string} argStringPath
-     * @returns {Error | undefined}
+     * @returns {Error|undefined}
      * */
     getErrorIfPathIsOutsideProject = (argStringPath) => {
         if (!argStringPath.startsWith(this.fieldStringPathDirProject)) {
@@ -46,34 +46,39 @@ class HelperPathsProject {
 
     /**
      * @param {string} argStringPathRel
-     * @returns string
+     * @returns {string}
      * */
-    getStringPathAbsolute = (argStringPathRel) =>
-        path.join(this.fieldStringPathDirProject, argStringPathRel);
+    getStringPathAbsolute = (argStringPathRel) => {
+        return path.join(this.fieldStringPathDirProject, argStringPathRel);
+    }
 
     /**
      * @param {string} argStringPathRel
-     * @returns string
+     * @returns {string}
      * */
-    getStringPathDataInput = (argStringPathRel = undefined) =>
-        argStringPathRel === undefined
+    getStringPathDataInput = (argStringPathRel = undefined) => {
+        return argStringPathRel === undefined
             ? this.fieldStringPathDirDataOutput
             : path.join(this.fieldStringPathDirDataOutput, argStringPathRel);
+    }
 
     /**
      * @param {string} argStringPathRel
-     * @returns string
+     * @returns {string}
      * */
-    getStringPathDataOutput = (argStringPathRel = undefined) =>
-        argStringPathRel === undefined
+    getStringPathDataOutput = (argStringPathRel = undefined) => {
+        return argStringPathRel === undefined
             ? this.fieldStringPathDirDataOutput
             : path.join(this.fieldStringPathDirDataOutput, argStringPathRel);
+    }
 
     /**
      * @param {string} argStringPath
+     * @returns {boolean}
      * */
-    logicDirIsProjectRoot = (argStringPath) =>
-        fs.readdirSync(argStringPath).includes("package.json");
+    isDirProjectRoot = (argStringPath) => {
+        return fs.readdirSync(argStringPath).includes("package.json");
+    }
     //
     // Setup
     //
@@ -102,7 +107,7 @@ class HelperPathsProject {
                 //
                 // Return the first dir that contains 'package.json'
                 //
-                case this.logicDirIsProjectRoot(stringToReturn):
+                case this.isDirProjectRoot(stringToReturn):
                     return stringToReturn;
                 //
                 // If we get to the root dir, then obviously this is a major error; return undefined

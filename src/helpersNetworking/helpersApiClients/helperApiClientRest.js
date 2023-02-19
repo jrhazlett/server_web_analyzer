@@ -30,9 +30,9 @@ export default class helperApiClientRest {
      * It defaults to a 1 sec timeout
      *
      * @param {Object} argObjectAxiosRequestConfig
-     * @returns any
+     * @returns {any}
      * */
-    static async getResponse(argObjectAxiosRequestConfig) {
+    static getResponse = async (argObjectAxiosRequestConfig) => {
         //
         // Create a copy of the incoming config; this we way avoid changing the argument
         //
@@ -83,7 +83,7 @@ export default class helperApiClientRest {
     /**
      * If necessary, merge this with an existing config
      *
-     * @returns Object
+     * @returns {Object}
      * */
     static getObjectSettingHeaderContentType = () => ({
         "Content-type": "application/json; charset=utf-8",
